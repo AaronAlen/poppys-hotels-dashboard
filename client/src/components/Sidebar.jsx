@@ -5,8 +5,6 @@ import {
   TrendingUp, 
   Sparkles, 
   BellRing, 
-  ShieldAlert,
-  Building2,
   Info
 } from 'lucide-react';
 import PoppysLogo from './PoppysLogo';
@@ -14,8 +12,8 @@ import PoppysLogo from './PoppysLogo';
 export default function Sidebar({ activeTab, setActiveTab }) {
   const primaryNav = [
     { id: 'overview', label: 'Executive Overview', icon: LayoutDashboard, badge: null },
-    { id: 'branches', label: 'Regional Properties & Map', icon: MapPin, badge: '8 Hotels' },
-    { id: 'forecast', label: 'Demand Forecast & Yield', icon: TrendingUp, badge: 'AI Model' },
+    { id: 'branches', label: 'Properties & Map', icon: MapPin, badge: '8' },
+    { id: 'forecast', label: 'Forecast & Yield', icon: TrendingUp, badge: 'AI' },
   ];
 
   return (
@@ -36,7 +34,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
               className={`nav-item ${isActive ? 'active' : ''}`}
             >
               <Icon size={18} strokeWidth={2} />
-              <span>{item.label}</span>
+              <span className="nav-label-text">{item.label}</span>
               {item.badge && <span className="nav-item-badge">{item.badge}</span>}
             </button>
           );
@@ -50,7 +48,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
           <div className="ai-sparkle-pill">
             <Sparkles size={16} />
           </div>
-          <span>AI Business Advisor</span>
+          <span className="nav-label-text">AI Advisor</span>
           <span className="badge-pulse">Live</span>
         </button>
 
@@ -59,8 +57,8 @@ export default function Sidebar({ activeTab, setActiveTab }) {
           className={`nav-item ${activeTab === 'alerts' ? 'active' : ''}`}
         >
           <BellRing size={18} />
-          <span>Risk & Anomaly Alerts</span>
-          <span className="badge-count">2 Active</span>
+          <span className="nav-label-text">Anomaly Alerts</span>
+          <span className="badge-count">2</span>
         </button>
       </nav>
 
@@ -69,8 +67,8 @@ export default function Sidebar({ activeTab, setActiveTab }) {
           <span className="mock-badge">
             <Info size={12} /> Executive Suite
           </span>
-          <p className="footer-title">Poppys Group Executive</p>
-          <span className="footer-sub">Business Owner Intelligence Dashboard</span>
+          <p className="footer-title">Poppys Group</p>
+          <span className="footer-sub">Managing Director Intelligence</span>
         </div>
       </div>
     </aside>

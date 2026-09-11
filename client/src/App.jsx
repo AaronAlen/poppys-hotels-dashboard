@@ -5,7 +5,6 @@ import KpiGrid from './components/KpiGrid';
 import AlertsSection from './components/AlertsSection';
 import BranchTable from './components/BranchTable';
 import ChartsDualGrid from './components/ChartsDualGrid';
-import BookingAndRevenueDonuts from './components/BookingAndRevenueDonuts';
 import RoomCategorySection from './components/RoomCategorySection';
 import RestaurantAnalytics from './components/RestaurantAnalytics';
 import OccupancyForecast from './components/OccupancyForecast';
@@ -42,11 +41,11 @@ export default function App() {
   const [isNotifDrawerOpen, setIsNotifDrawerOpen] = useState(false);
 
   const showToast = (message) => {
-    const id = Date.now() + Math.random();
-    setToasts((prev) => [...prev, { id, message }]);
+    const id = Date.now();
+    setToasts([{ id, message }]);
     setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3500);
+      setToasts((prev) => prev.filter((t) => t.id === id));
+    }, 2800);
   };
 
   // Initial Data Load
@@ -97,11 +96,6 @@ export default function App() {
 
   const handleBranchSelect = (branchKey) => {
     setSelectedBranch(branchKey);
-    if (branchKey === 'all') {
-      showToast('Viewing aggregated performance for All 8 Poppys Properties.');
-    } else {
-      showToast(`Focused on ${branchKey} branch analytics.`);
-    }
   };
 
   const handleAlertAction = (actionType, branchName) => {
@@ -166,11 +160,6 @@ export default function App() {
                   <ChartsDualGrid 
                     branches={branches}
                     occupancyTrend={occupancyTrend}
-                  />
-
-                  <BookingAndRevenueDonuts 
-                    bookingData={bookingData}
-                    revenueData={revenueData}
                   />
                 </div>
 

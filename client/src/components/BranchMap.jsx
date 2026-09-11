@@ -57,10 +57,14 @@ export default function BranchMap({
 
     mapInstanceRef.current = map;
 
-    // CartoDB Dark Matter Real Vector Tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      subdomains: 'abcd',
-      maxZoom: 19
+    // Professional Dark GIS Tiles (No API key, No watermarks)
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 16,
+      attribution: 'Esri, HERE, Garmin'
+    }).addTo(map);
+
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 16
     }).addTo(map);
 
     // Plot real branch markers with mouseover triggers
@@ -106,6 +110,10 @@ export default function BranchMap({
       });
     });
 
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 250);
+
     return () => {
       map.remove();
       mapInstanceRef.current = null;
@@ -121,27 +129,18 @@ export default function BranchMap({
     <div className="content-card dark-map-card curved-card-box" id="branch-map-section">
       <div className="card-header-bar">
         <div>
-          <div className="curved-kicker-pill">
-            <Compass size={13} style={{ color: '#00f2fe' }} />
-            <span>REAL GEOGRAPHIC TAMIL NADU CARTOGRAPHY</span>
-          </div>
-          <h3 className="card-title text-white mt-1">
-            Poppys Regional Property Network &amp; Live Satellite Presence
+          <h3 className="card-title text-white">
+            <span className="neon-indicator cyan-indicator"></span> Tamil Nadu Regional Properties &amp; Live Satellite Presence
           </h3>
           <p className="card-subtitle text-slate-400">
-            Interactive dark GIS mapping across all 8 Poppys properties in Tamil Nadu &amp; Puducherry
+            Official GIS mapping across all 8 Poppys hotels &bull; Hover any marker to inspect performance
           </p>
         </div>
 
-        <div className="map-actions-curved-row">
-          <span className="curved-live-badge" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-            <Navigation size={12} /> Fixed Tamil Nadu Cartography (No Zoom)
-          </span>
-          <div className="curved-legend-box">
-            <span className="leg-item"><span className="leg-dot dot-strong"></span> &gt;75% Occ</span>
-            <span className="leg-item"><span className="leg-dot dot-warn"></span> Anomaly Alert</span>
-            <span className="leg-item"><span className="leg-dot dot-moderate"></span> Steady</span>
-          </div>
+        <div className="map-legend">
+          <span className="leg-item"><span className="leg-dot dot-strong"></span> Strong Performance (&gt;75%)</span>
+          <span className="leg-item"><span className="leg-dot dot-warn"></span> Anomaly Alert</span>
+          <span className="leg-item"><span className="leg-dot dot-moderate"></span> Steady</span>
         </div>
       </div>
 

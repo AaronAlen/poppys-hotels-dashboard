@@ -1,77 +1,57 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Chart } from 'chart.js/auto';
 
 export default function ChartsDualGrid({ branches, occupancyTrend }) {
-  const containerRef = useRef(null);
   const barCanvasRef = useRef(null);
   const lineCanvasRef = useRef(null);
   const barChartInst = useRef(null);
   const lineChartInst = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
 
-  // IntersectionObserver to detect when charts enter the viewport
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          // Re-trigger animation if already instantiated
-          if (barChartInst.current) {
-            barChartInst.current.reset();
-            barChartInst.current.update();
-          }
-          if (lineChartInst.current) {
-            lineChartInst.current.reset();
-            lineChartInst.current.update();
-          }
-        }
-      },
-      { threshold: 0.15 }
-    );
+  // Safe fallback data
+  const branchList = (branches && branches.length > 0) ? branches : [
+    { key: 'Madurai', name: 'Poppys Madurai', revenueLakhs: 14.8, operationalStatus: 'Strong Performance' },
+    { key: 'Rameswaram', name: 'Poppys Rameswaram', revenueLakhs: 8.9, operationalStatus: 'Strong Performance' },
+    { key: 'Kumbakonam', name: 'Poppys Kumbakonam', revenueLakhs: 6.4, operationalStatus: 'Moderate' },
+    { key: 'Ooty', name: 'Poppys Ooty', revenueLakhs: 5.1, operationalStatus: 'Needs Attention' },
+    { key: 'Kodaikanal', name: 'Poppys Kodaikanal', revenueLakhs: 4.8, operationalStatus: 'Moderate' },
+    { key: 'Pondicherry', name: 'Poppys Pondicherry', revenueLakhs: 5.2, operationalStatus: 'Strong Performance' },
+    { key: 'Anaikatti', name: 'Poppys Anaikatti', revenueLakhs: 3.4, operationalStatus: 'Moderate' }
+  ];
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
+  const trendData = occupancyTrend || {
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    thisWeek: [74, 76, 79, 81, 88, 92, 85],
+    lastWeek: [68, 70, 71, 74, 82, 86, 78]
+  };
 
   // 1. Neon Branch Revenue Bar Chart
   useEffect(() => {
-    if (!barCanvasRef.current || !branches || !isVisible) return;
+    if (!barCanvasRef.current) return;
     if (barChartInst.current) barChartInst.current.destroy();
 
     const ctx = barCanvasRef.current.getContext('2d');
 
-    // Create Neon Gradients for Bars
-    const neonCyanGradient = ctx.createLinearGradient(0, 0, 0, 250);
+    const neonCyanGradient = ctx.createLinearGradient(0, 0, 0, 240);
     neonCyanGradient.addColorStop(0, '#00f2fe');
-    neonCyanGradient.addColorStop(1, '#1e3a8a');
+    neonCyanGradient.addColorStop(1, '#0284c7');
 
-    const neonEmeraldGradient = ctx.createLinearGradient(0, 0, 0, 250);
+    const neonEmeraldGradient = ctx.createLinearGradient(0, 0, 0, 240);
     neonEmeraldGradient.addColorStop(0, '#00f5a0');
-    neonEmeraldGradient.addColorStop(1, '#065f46');
+    neonEmeraldGradient.addColorStop(1, '#059669');
 
-    const neonRedGradient = ctx.createLinearGradient(0, 0, 0, 250);
+    const neonRedGradient = ctx.createLinearGradient(0, 0, 0, 240);
     neonRedGradient.addColorStop(0, '#ff4b72');
-    neonRedGradient.addColorStop(1, '#881337');
+    neonRedGradient.addColorStop(1, '#be123c');
 
-    const neonAmberGradient = ctx.createLinearGradient(0, 0, 0, 250);
+    const neonAmberGradient = ctx.createLinearGradient(0, 0, 0, 240);
     neonAmberGradient.addColorStop(0, '#f59e0b');
-    neonAmberGradient.addColorStop(1, '#78350f');
+    neonAmberGradient.addColorStop(1, '#b45309');
 
-    const neonPurpleGradient = ctx.createLinearGradient(0, 0, 0, 250);
-    neonPurpleGradient.addColorStop(0, '#a855f7');
-    neonPurpleGradient.addColorStop(1, '#3b0764');
-
-    const labels = branches.map(b => b.name);
-    const data = branches.map(b => b.revenueLakhs);
-    const bgColors = branches.map(b => {
-      if (b.key === 'Madurai') return neonCyanGradient;
-      if (b.key === 'Rameswaram' || b.key === 'Pondicherry') return neonEmeraldGradient;
-      if (b.key === 'Ooty') return neonRedGradient;
-      if (b.key === 'Kodaikanal') return neonAmberGradient;
-      if (b.key === 'Anaikatti') return neonPurpleGradient;
+    const labels = branchList.map(b => b.name.replace('Poppys ', ''));
+    const data = branchList.map(b => b.revenueLakhs);
+    const bgColors = branchList.map(b => {
+      if (b.operationalStatus === 'Strong Performance') return neonEmeraldGradient;
+      if (b.operationalStatus === 'Needs Attention') return neonRedGradient;
       return neonCyanGradient;
     });
 
@@ -84,7 +64,7 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
           data,
           backgroundColor: bgColors,
           borderColor: '#ffffff',
-          borderWidth: 1,
+          borderWidth: 1.5,
           borderRadius: 8,
           borderSkipped: false,
           barThickness: 24
@@ -94,30 +74,29 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
-          duration: 1300,
+          duration: 900,
           easing: 'easeOutQuart'
         },
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(11, 23, 42, 0.95)',
+            backgroundColor: '#0f172a',
             borderColor: '#38bdf8',
             borderWidth: 1,
-            padding: 12,
-            displayColors: false,
+            padding: 10,
             callbacks: {
-              label: (ctx) => ` Revenue: ₹${ctx.raw} Lakhs (${branches[ctx.dataIndex]?.operationalStatus})`
+              label: (ctx) => ` Revenue: ₹${ctx.raw}L (${branchList[ctx.dataIndex]?.operationalStatus || ''})`
             }
           }
         },
         scales: {
           x: { 
             grid: { display: false }, 
-            ticks: { font: { size: 10, weight: 600 }, color: '#475569' } 
+            ticks: { font: { size: 11, weight: '600' }, color: '#475569' } 
           },
           y: {
             beginAtZero: true,
-            grid: { color: 'rgba(226, 232, 240, 0.6)' },
+            grid: { color: 'rgba(226, 232, 240, 0.7)' },
             ticks: {
               callback: (v) => `₹${v}L`,
               font: { size: 11 },
@@ -131,72 +110,51 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
     return () => {
       if (barChartInst.current) barChartInst.current.destroy();
     };
-  }, [branches, isVisible]);
+  }, [branches]);
 
-  // 2. Unique Neon Lined 7-Day Occupancy Trend Chart with Glowing Animation
+  // 2. Unique Neon Lined 7-Day Occupancy Trend Chart
   useEffect(() => {
-    if (!lineCanvasRef.current || !occupancyTrend || !isVisible) return;
+    if (!lineCanvasRef.current) return;
     if (lineChartInst.current) lineChartInst.current.destroy();
 
     const ctx = lineCanvasRef.current.getContext('2d');
 
-    // Neon Cyan Gradient for Line Stroke
     const neonLineGradient = ctx.createLinearGradient(0, 0, 450, 0);
     neonLineGradient.addColorStop(0, '#00f2fe');
     neonLineGradient.addColorStop(0.5, '#3b82f6');
     neonLineGradient.addColorStop(1, '#8b5cf6');
 
-    // Neon Glow Area Fill
     const neonAreaGradient = ctx.createLinearGradient(0, 0, 0, 240);
-    neonAreaGradient.addColorStop(0, 'rgba(0, 242, 254, 0.32)');
-    neonAreaGradient.addColorStop(0.6, 'rgba(59, 130, 246, 0.12)');
-    neonAreaGradient.addColorStop(1, 'rgba(59, 130, 246, 0.00)');
-
-    // Custom Neon Glow Shadow Plugin
-    const neonGlowPlugin = {
-      id: 'neonGlowPlugin',
-      beforeDatasetDraw(chart, args) {
-        if (args.index === 0) {
-          const { ctx } = chart;
-          ctx.save();
-          ctx.shadowColor = 'rgba(0, 242, 254, 0.75)';
-          ctx.shadowBlur = 16;
-          ctx.shadowOffsetY = 4;
-        }
-      },
-      afterDatasetDraw(chart) {
-        chart.ctx.restore();
-      }
-    };
+    neonAreaGradient.addColorStop(0, 'rgba(0, 242, 254, 0.35)');
+    neonAreaGradient.addColorStop(0.7, 'rgba(59, 130, 246, 0.1)');
+    neonAreaGradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
 
     lineChartInst.current = new Chart(lineCanvasRef.current, {
       type: 'line',
       data: {
-        labels: occupancyTrend.labels,
+        labels: trendData.labels,
         datasets: [
           {
             label: 'This Week',
-            data: occupancyTrend.thisWeek,
+            data: trendData.thisWeek,
             borderColor: neonLineGradient,
             backgroundColor: neonAreaGradient,
             fill: true,
-            tension: 0.42,
+            tension: 0.38,
             borderWidth: 3.5,
             pointBackgroundColor: '#ffffff',
             pointBorderColor: '#00f2fe',
             pointBorderWidth: 3,
             pointRadius: 5,
-            pointHoverRadius: 8,
-            pointHoverBackgroundColor: '#00f2fe',
-            pointHoverBorderColor: '#ffffff'
+            pointHoverRadius: 7
           },
           {
             label: 'Last Week',
-            data: occupancyTrend.lastWeek,
-            borderColor: 'rgba(148, 163, 184, 0.8)',
-            borderDash: [6, 4],
+            data: trendData.lastWeek,
+            borderColor: 'rgba(148, 163, 184, 0.7)',
+            borderDash: [5, 4],
             fill: false,
-            tension: 0.42,
+            tension: 0.38,
             borderWidth: 2,
             pointBackgroundColor: '#94a3b8',
             pointRadius: 3
@@ -207,8 +165,8 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
-          duration: 1500,
-          easing: 'easeOutCubic'
+          duration: 1000,
+          easing: 'easeOutQuart'
         },
         interaction: {
           mode: 'index',
@@ -217,11 +175,10 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(11, 23, 42, 0.95)',
+            backgroundColor: '#0f172a',
             borderColor: '#00f2fe',
             borderWidth: 1.5,
-            padding: 12,
-            titleFont: { size: 12, weight: 'bold' },
+            padding: 10,
             callbacks: {
               label: (ctx) => ` ${ctx.dataset.label}: ${ctx.raw}% Occupancy`
             }
@@ -230,12 +187,12 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
         scales: {
           x: { 
             grid: { display: false }, 
-            ticks: { font: { size: 11, weight: 600 }, color: '#475569' } 
+            ticks: { font: { size: 11, weight: '600' }, color: '#475569' } 
           },
           y: {
             min: 50,
             max: 100,
-            grid: { color: 'rgba(226, 232, 240, 0.6)' },
+            grid: { color: 'rgba(226, 232, 240, 0.7)' },
             ticks: {
               callback: (v) => `${v}%`,
               font: { size: 11 },
@@ -243,17 +200,16 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
             }
           }
         }
-      },
-      plugins: [neonGlowPlugin]
+      }
     });
 
     return () => {
       if (lineChartInst.current) lineChartInst.current.destroy();
     };
-  }, [occupancyTrend, isVisible]);
+  }, [occupancyTrend]);
 
   return (
-    <div className="charts-dual-grid" ref={containerRef}>
+    <div className="charts-dual-grid">
       {/* Branch Revenue Comparison */}
       <div className="content-card neon-card curved-card-box">
         <div className="card-header-bar">

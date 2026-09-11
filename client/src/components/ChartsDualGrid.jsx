@@ -1,15 +1,44 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Chart } from 'chart.js/auto';
 
 export default function ChartsDualGrid({ branches, occupancyTrend }) {
+  const containerRef = useRef(null);
   const barCanvasRef = useRef(null);
   const lineCanvasRef = useRef(null);
   const barChartInst = useRef(null);
   const lineChartInst = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // IntersectionObserver to detect when charts enter the viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          // Re-trigger animation if already instantiated
+          if (barChartInst.current) {
+            barChartInst.current.reset();
+            barChartInst.current.update();
+          }
+          if (lineChartInst.current) {
+            lineChartInst.current.reset();
+            lineChartInst.current.update();
+          }
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   // 1. Neon Branch Revenue Bar Chart
   useEffect(() => {
-    if (!barCanvasRef.current || !branches) return;
+    if (!barCanvasRef.current || !branches || !isVisible) return;
     if (barChartInst.current) barChartInst.current.destroy();
 
     const ctx = barCanvasRef.current.getContext('2d');
@@ -65,7 +94,7 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
-          duration: 1200,
+          duration: 1300,
           easing: 'easeOutQuart'
         },
         plugins: {
@@ -102,11 +131,11 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
     return () => {
       if (barChartInst.current) barChartInst.current.destroy();
     };
-  }, [branches]);
+  }, [branches, isVisible]);
 
   // 2. Unique Neon Lined 7-Day Occupancy Trend Chart with Glowing Animation
   useEffect(() => {
-    if (!lineCanvasRef.current || !occupancyTrend) return;
+    if (!lineCanvasRef.current || !occupancyTrend || !isVisible) return;
     if (lineChartInst.current) lineChartInst.current.destroy();
 
     const ctx = lineCanvasRef.current.getContext('2d');
@@ -178,7 +207,7 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
-          duration: 1400,
+          duration: 1500,
           easing: 'easeOutCubic'
         },
         interaction: {
@@ -221,12 +250,12 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
     return () => {
       if (lineChartInst.current) lineChartInst.current.destroy();
     };
-  }, [occupancyTrend]);
+  }, [occupancyTrend, isVisible]);
 
   return (
-    <div className="charts-dual-grid">
+    <div className="charts-dual-grid" ref={containerRef}>
       {/* Branch Revenue Comparison */}
-      <div className="content-card neon-card">
+      <div className="content-card neon-card curved-card-box">
         <div className="card-header-bar">
           <div>
             <h3 className="card-title">
@@ -242,7 +271,7 @@ export default function ChartsDualGrid({ branches, occupancyTrend }) {
       </div>
 
       {/* Unique Neon Lined Occupancy Trend Chart */}
-      <div className="content-card neon-card">
+      <div className="content-card neon-card curved-card-box">
         <div className="card-header-bar">
           <div>
             <h3 className="card-title">

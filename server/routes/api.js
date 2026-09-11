@@ -147,136 +147,122 @@ router.get('/occupancy-forecast', (req, res) => {
   });
 });
 
-// 12. AI Hotel Analyst Query Endpoint
-router.post('/ai/query', (req, res) => {
+// 12. AI Hotel Analyst Query Endpoint with Real Groq LLM Integration
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+
+router.post('/ai/query', async (req, res) => {
   const { question } = req.body;
   if (!question) {
     return res.status(400).json({ success: false, message: 'Question string is required' });
   }
 
+  // Attempt Real Groq LLM Generation
+  try {
+    const groqSystemPrompt = `
+You are the Chief AI Strategic Advisor for the Managing Director & Business Owner of Poppys Hotels, a premier Tamil Nadu hospitality chain with 8 properties (Madurai, Rameswaram, Kumbakonam, Ooty, Kodaikanal, Pondicherry, Anaikatti).
+
+Current Live Group Operational & Financial Data:
+- Group Weekly Revenue: ₹48.6 Lakhs (+13.5% WoW)
+- Group Occupancy: 78.4% average across 420 keys
+- ADR (Average Daily Rate): ₹4,850 | Group RevPAR: ₹3,802 | Gross Operating Profit (GOP): 38.2%
+- Booking Channels & Margins: Direct Website 42% (₹20.4L, zero commission), OTA Portals 58% (paying ~18% commission = ₹4.2L margin leakage to MakeMyTrip/Booking.com)
+- Property Performance:
+  * Madurai: ₹11.2L rev, 84.2% occ, 4.6★ (Leader, banquet bookings high)
+  * Rameswaram: ₹8.4L rev, 79.5% occ, 4.5★ (Pilgrim surge)
+  * Kumbakonam: ₹6.8L rev, 74.1% occ, 4.4★ (Heritage packages)
+  * Ooty: ₹7.1L rev, 71.2% occ, 4.3★ (CRITICAL: OTA bulk cancellations jumped +18%)
+  * Kodaikanal: ₹5.2L rev, 58.4% occ, 4.1★ (Mid-week occupancy dip to 54%)
+  * Pondicherry: ₹5.6L rev, 82.6% occ, 4.7★ (High weekend getaway demand)
+  * Anaikatti: ₹4.3L rev, 69.8% occ, 4.5★ (Eco-tourism nature lodge)
+- 7-Day Demand Forecast: Saturday peak at 92% near capacity, Monday check-out dip at 63%, Tuesday mid-week low at 59%.
+
+Instructions:
+Respond in clear JSON format with:
+{
+  "title": "Short executive title",
+  "summary": "1-2 sentence high impact summary for the business owner",
+  "positive": ["point 1 with numbers", "point 2 with numbers"],
+  "needsAttention": ["risk or anomaly point 1", "risk point 2"],
+  "recommendation": "Decisive, actionable recommendation or pricing rule for the owner"
+}
+Only output valid JSON. No surrounding markdown fences.`;
+
+    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GROQ_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: groqSystemPrompt },
+          { role: 'user', content: question }
+        ],
+        temperature: 0.2,
+        max_tokens: 800,
+        response_format: { type: 'json_object' }
+      })
+    });
+
+    if (groqRes.ok) {
+      const groqData = await groqRes.json();
+      const rawText = groqData.choices?.[0]?.message?.content;
+      if (rawText) {
+        const parsed = JSON.parse(rawText);
+        return res.json({
+          success: true,
+          source: 'Groq Real LLM (Llama 3.3 70B)',
+          query: question,
+          response: parsed
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Groq LLM call error, using intelligent fallback:', err.message);
+  }
+
+  // Resilient Fallback Knowledge Base if Groq is temporarily unreachable
   const query = question.toLowerCase();
 
-  // Knowledge Base Responses
   if (query.includes('best') || query.includes('top branch')) {
     return res.json({
       success: true,
+      source: 'Executive Knowledge Engine',
       query: question,
       response: {
-        title: 'Top Performing Branch This Week',
-        summary: 'Madurai Central Hub outperformed across all group operational metrics.',
+        title: 'Top Performing Branch: Madurai Central Hub',
+        summary: 'Madurai generated ₹11.2L (+16.8% WoW) with 84.2% occupancy driven by high-margin banquet bookings.',
         positive: [
-          'Revenue reached ₹11.2 Lakhs (+16.8% WoW growth)',
-          'Occupancy peaked at 84.2% with strong banquet utilization',
-          '940 food orders fulfilled with high guest CSAT (4.6/5)'
+          'Revenue reached ₹11.2 Lakhs with 84.2% occupancy',
+          'Banquet halls generated ₹3.4L in wedding and corporate revenue',
+          'Guest CSAT rating achieved 4.6 / 5.0'
         ],
         needsAttention: [
-          'Kitchen prep backlog during Saturday evening wedding rush'
+          'Saturday banquet dinner prep backlog requires 2 additional temporary staff'
         ],
-        recommendation: 'Replicate the temple heritage thali package in Kumbakonam and Rameswaram.'
+        recommendation: 'Replicate the Madurai "Temple Heritage Feast" dining package across Kumbakonam and Rameswaram.'
       }
     });
   }
 
-  if (query.includes('attention') || query.includes('cancellation') || query.includes('worst')) {
-    return res.json({
-      success: true,
-      query: question,
-      response: {
-        title: 'Branches Requiring Management Attention',
-        summary: 'Operational anomalies detected in Ooty and Kodaikanal properties.',
-        positive: [
-          'Ooty weekend room rate held firm at ₹6,200 ADR',
-          'Kodaikanal guest satisfaction remains solid at 4.1 ⭐'
-        ],
-        needsAttention: [
-          'Ooty cancellation rate increased by 18% over the past 4 days',
-          'Kodaikanal weekday occupancy dropped to 54%'
-        ],
-        recommendation: 'Increase weekday promotional packages in Kodaikanal and investigate OTA cancellations in Ooty.'
-      }
-    });
-  }
-
-  if (query.includes('revenue') || query.includes('money') || query.includes('earnings') || query.includes('last week')) {
-    return res.json({
-      success: true,
-      query: question,
-      response: {
-        title: 'Weekly Group Revenue Summary',
-        summary: 'Total group revenue reached ₹48.6 Lakhs, beating the prior week by 13.5%.',
-        positive: [
-          'Room Revenue: ₹31.2L (64.2% share)',
-          'Restaurant & F&B: ₹9.4L (19.3% share)',
-          'Events & Banquets: ₹4.1L (8.4% share)',
-          'Other Services: ₹3.9L (8.0% share)'
-        ],
-        needsAttention: [
-          'Transit properties yield represents only 2.8% of total revenue'
-        ],
-        recommendation: 'Maintain current rate card and enforce dynamic weekend pricing surges.'
-      }
-    });
-  }
-
-  if (query.includes('room') || query.includes('category') || query.includes('profitable') || query.includes('deluxe')) {
-    return res.json({
-      success: true,
-      query: question,
-      response: {
-        title: 'Room Category Profitability Analysis',
-        summary: 'Deluxe Room Category is the #1 profit generator across Poppys Hotels.',
-        positive: [
-          'Deluxe accounts for ₹19.2L (39.5% of total revenue)',
-          'Highest category occupancy at 83.8% (134 of 160 rooms occupied)',
-          'Average Daily Rate (ADR) of ₹4,800 provides optimal margin balance'
-        ],
-        needsAttention: [
-          'Family Villas occupancy is lagging at 66.7%'
-        ],
-        recommendation: 'Package Family Villas with complimentary dinner buffet to boost weekend leisure stays.'
-      }
-    });
-  }
-
-  if (query.includes('food') || query.includes('restaurant') || query.includes('dish') || query.includes('biryani')) {
-    return res.json({
-      success: true,
-      query: question,
-      response: {
-        title: 'Restaurant & F&B Intelligence',
-        summary: 'Past week generated 3,842 orders (+19.7% growth) with Saturday peak of 782 orders.',
-        positive: [
-          '1. Chicken Biryani — 428 orders (74% gross margin)',
-          '2. Masala Dosa — 371 orders (Breakfast volume leader)',
-          '3. Parotta & Salna — 318 orders',
-          '4. Paneer Butter Masala — 286 orders',
-          '5. Fresh Cold-Pressed Juice — 251 orders'
-        ],
-        needsAttention: [
-          'Continental menu items show slower turnover in hill station outlets'
-        ],
-        recommendation: 'Feature signature South Indian heritage items prominently in Ooty & Kodaikanal room menus.'
-      }
-    });
-  }
-
-  // Default / Generic query response
   return res.json({
     success: true,
+    source: 'Executive Knowledge Engine',
     query: question,
     response: {
       title: `Executive Intelligence for "${question}"`,
-      summary: 'Overall hotel performance improved by 12.8% compared with last week.',
+      summary: 'Aggregated Poppys Group revenue reached ₹48.6L (+13.5%) with 78.4% average occupancy.',
       positive: [
-        'Revenue increased 13.5% (₹48.6L total)',
-        'Occupancy increased 10.1% group-wide (78.4% avg)',
-        'Food orders increased 19.7% (3,842 total)'
+        'Direct Website Bookings increased to 42%, saving ₹4.2L in commissions',
+        'Madurai and Pondicherry are outperforming group targets (>82% occ)',
+        'Saturday peak demand forecast at 92% near capacity'
       ],
       needsAttention: [
-        'Kodaikanal weekday occupancy is low (54%)',
-        'Ooty cancellation rate increased (+18%)'
+        'Ooty OTA bulk cancellation rate spiked to 18.2%',
+        'Kodaikanal mid-week occupancy is low at 54%'
       ],
-      recommendation: 'Increase weekday promotional packages in Kodaikanal and investigate OTA cancellations in Ooty.'
+      recommendation: 'Enforce 48-hour non-refundable policy in Ooty and launch Mid-Week Spa package in Kodaikanal.'
     }
   });
 });

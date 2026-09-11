@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, Database } from 'lucide-react';
+import { Bell, Database, ShieldCheck } from 'lucide-react';
 
 export default function Header({ 
   selectedBranch, 
@@ -13,10 +13,10 @@ export default function Header({
       <div className="header-inner">
         <div className="header-welcome">
           <div className="welcome-chip">
-            <span className="status-indicator"></span> Live Group Operations
+            <span className="status-indicator"></span> Executive Business Suite
           </div>
-          <h1>Good Morning, Manager! <span className="wave-emoji">👋</span></h1>
-          <p className="header-subtitle">Here's your hotel performance overview across all branches.</p>
+          <h1>Good Morning, Managing Director! <span className="wave-emoji">👋</span></h1>
+          <p className="header-subtitle">Executive portfolio pulse & profit metrics across 8 Poppys properties.</p>
         </div>
 
         <div className="header-controls">
@@ -27,12 +27,12 @@ export default function Header({
                 className="custom-select" 
                 title="Date Range Selector"
                 defaultValue="past7"
-                onChange={(e) => onShowToast(`Date range adjusted: ${e.target.options[e.target.selectedIndex].text}`)}
+                onChange={(e) => onShowToast(`Reporting Period: ${e.target.options[e.target.selectedIndex].text}`)}
               >
                 <option value="past7">Past 7 Days (Sep 5 - Sep 11)</option>
                 <option value="mtd">Month to Date (Sep 2026)</option>
                 <option value="last30">Past 30 Days</option>
-                <option value="qtd">Quarter to Date</option>
+                <option value="qtd">Q3 FY26 (Quarter to Date)</option>
               </select>
             </div>
 
@@ -44,7 +44,7 @@ export default function Header({
                 value={selectedBranch}
                 onChange={(e) => onBranchChange(e.target.value)}
               >
-                <option value="all">All Branches (8)</option>
+                <option value="all">All 8 Properties (Tamil Nadu)</option>
                 <option value="Madurai">Madurai (Central Hub)</option>
                 <option value="Rameswaram">Rameswaram Beach Resort</option>
                 <option value="Kumbakonam">Kumbakonam Heritage</option>
@@ -56,51 +56,18 @@ export default function Header({
               </select>
             </div>
 
-            {/* Category Selector */}
+            {/* Booking Channel Margins Selector */}
             <div className="select-wrapper">
               <select 
                 className="custom-select" 
-                title="Room Category Selector"
+                title="Revenue Channel Selector"
                 defaultValue="all"
-                onChange={(e) => onShowToast(`Room Category filter: ${e.target.value.toUpperCase()}`)}
+                onChange={(e) => onShowToast(`Channel Filter: ${e.target.options[e.target.selectedIndex].text}`)}
               >
-                <option value="all">All Categories</option>
-                <option value="deluxe">Deluxe Rooms</option>
-                <option value="suite">Suites</option>
-                <option value="premium">Premium</option>
-                <option value="standard">Standard</option>
-                <option value="family">Family Villas</option>
-              </select>
-            </div>
-
-            {/* Booking Type Selector */}
-            <div className="select-wrapper">
-              <select 
-                className="custom-select" 
-                title="Booking Type Selector"
-                defaultValue="all"
-                onChange={(e) => onShowToast(`Channel filter: ${e.target.value.toUpperCase()}`)}
-              >
-                <option value="all">All Booking Types</option>
-                <option value="direct">Direct Website (38%)</option>
-                <option value="ota">OTA / Portals (27%)</option>
-                <option value="corporate">Corporate (14%)</option>
-                <option value="walkin">Walk-in (12%)</option>
-              </select>
-            </div>
-
-            {/* Room Selector */}
-            <div className="select-wrapper">
-              <select 
-                className="custom-select" 
-                title="Room Inventory Selector"
-                defaultValue="all"
-                onChange={(e) => onShowToast(`Inventory filter: ${e.target.value.toUpperCase()}`)}
-              >
-                <option value="all">All Rooms (420)</option>
-                <option value="occupied">Occupied (329)</option>
-                <option value="vacant">Vacant Clean (64)</option>
-                <option value="maintenance">Maintenance (27)</option>
+                <option value="all">All Booking Channels</option>
+                <option value="direct">Direct Brand Website (Zero Commission)</option>
+                <option value="ota">OTA Portals (MakeMyTrip, Booking.com)</option>
+                <option value="corporate">Corporate & Banquet Contracts</option>
               </select>
             </div>
           </div>
@@ -109,26 +76,26 @@ export default function Header({
             <button 
               className="icon-button notification-btn" 
               onClick={onToggleNotif}
-              title="System Notifications"
+              title="Risk & Anomaly Alerts"
             >
               <Bell size={18} />
-              <span className="notif-badge">3</span>
+              <span className="notif-badge">2</span>
             </button>
 
             <div 
               className="manager-profile"
-              onClick={() => onShowToast('Logged in as Rajesh Kumar (VP Operations). Session active.')}
+              onClick={() => onShowToast('Logged in as Managing Director. Full executive privileges active.')}
             >
               <div className="avatar-ring">
                 <img 
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" 
-                  alt="Manager Profile" 
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80" 
+                  alt="Business Owner" 
                   className="avatar-img" 
                 />
               </div>
               <div className="profile-info">
-                <span className="user-name">Rajesh Kumar</span>
-                <span className="user-role">Group Operations VP</span>
+                <span className="user-name">A. P. Poppyraj</span>
+                <span className="user-role">Managing Director</span>
               </div>
             </div>
           </div>
@@ -137,7 +104,7 @@ export default function Header({
 
       <div className="header-mock-ribbon">
         <Database size={13} style={{ color: '#f59e0b' }} />
-        <span>Poppys Hotels Live Operations Sandbox &bull; Demo / Mock Data Active</span>
+        <span>Poppys Group PMS &amp; Central Reservation System Live Sync &bull; Executive Intelligence Edition</span>
       </div>
     </header>
   );

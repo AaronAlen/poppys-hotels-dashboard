@@ -1,67 +1,80 @@
 import React from 'react';
-import { Trophy, Sparkles } from 'lucide-react';
+import { Trophy, Sparkles, Bed, TrendingUp } from 'lucide-react';
+import AnimatedCounter from './AnimatedCounter';
 
 export default function RoomCategorySection({ categories }) {
   if (!categories || categories.length === 0) return null;
 
   return (
-    <div className="content-card" id="rooms">
+    <div className="curved-room-category-container curved-card-box" id="rooms">
       <div className="card-header-bar">
         <div>
-          <h3 className="card-title">Room Category Analysis</h3>
-          <p className="card-subtitle">Inventory distribution, average rates and yield by category</p>
+          <div className="curved-kicker-pill-gold">
+            <Bed size={12} />
+            <span>PORTFOLIO ROOM INVENTORY YIELD</span>
+          </div>
+          <h3 className="curved-main-title mt-1">Room Category Profitability &amp; Inventory Yield</h3>
+          <p className="curved-main-subtitle">Revenue contribution, average rates, and live occupancy by key category</p>
         </div>
-        <div className="highlight-pill">
+
+        <div className="curved-trophy-pill">
           <Trophy size={14} style={{ color: '#ca8a04' }} />
-          Most Revenue Generating Category: <strong>Deluxe (₹19.2L)</strong>
+          <span>Top Margin Generator: <strong>Deluxe (₹19.2L)</strong></span>
         </div>
       </div>
 
-      <div className="category-cards-grid">
+      <div className="curved-category-cards-grid">
         {categories.map((cat) => {
-          let progressFill = 'cat-progress-fill';
-          if (cat.isTopSeller) progressFill = 'cat-progress-fill success-fill';
-          else if (cat.occupancyPercent < 70) progressFill = 'cat-progress-fill warn-fill';
-
           return (
             <div 
               key={cat.name} 
-              className={`category-card ${cat.isTopSeller ? 'featured-category' : ''}`}
+              className={`curved-cat-card ${cat.isTopSeller ? 'featured-curved-cat' : ''}`}
             >
-              <div className="cat-header">
-                <span className="cat-name">
-                  {cat.name}
+              <div className="curved-cat-head">
+                <div className="curved-cat-title-wrap">
+                  <h4 className="curved-cat-name">{cat.name}</h4>
                   {cat.isTopSeller && (
-                    <span className="badge-star">
-                      <Sparkles size={9} /> Top Seller
+                    <span className="curved-gold-badge">
+                      <Sparkles size={10} /> Top Seller
                     </span>
                   )}
-                </span>
-                <span className="cat-rooms">{cat.totalRooms} Rooms</span>
-              </div>
-
-              <div className="cat-occ">
-                <span className="cat-occ-label">
-                  Occupancy: <strong style={{ color: cat.isTopSeller ? '#059669' : 'inherit' }}>{cat.occupancyPercent}%</strong>
-                </span>
-                <span className="cat-count">{cat.occupied} / {cat.totalRooms}</span>
-              </div>
-
-              <div className="cat-progress">
-                <div className={progressFill} style={{ width: `${cat.occupancyPercent}%` }}></div>
-              </div>
-
-              <div className="cat-meta-row">
-                <div>
-                  <span className="meta-label">Avg Price</span>
-                  <span className="meta-value">₹{cat.averagePrice?.toLocaleString()}</span>
                 </div>
-                <div>
-                  <span className="meta-label">Revenue</span>
-                  <span className="meta-value" style={{ color: cat.isTopSeller ? '#059669' : 'inherit' }}>
-                    ₹{cat.revenueLakhs}L
-                  </span>
+                <span className="curved-keys-pill">
+                  <AnimatedCounter value={cat.totalRooms} /> Keys
+                </span>
+              </div>
+
+              <div className="curved-cat-metrics-row">
+                <div className="curved-cat-metric-pill">
+                  <span className="pill-sub">Live Occupancy</span>
+                  <strong className={`pill-val ${cat.isTopSeller ? 'text-emerald' : ''}`}>
+                    <AnimatedCounter value={cat.occupancyPercent} suffix="%" decimals={1} />
+                  </strong>
                 </div>
+
+                <div className="curved-cat-metric-pill">
+                  <span className="pill-sub">Weekly Revenue</span>
+                  <strong className="pill-val text-gold">
+                    <AnimatedCounter value={cat.revenueLakhs} prefix="₹" suffix="L" decimals={1} />
+                  </strong>
+                </div>
+              </div>
+
+              {/* Curved Progress Track */}
+              <div className="curved-progress-track">
+                <div 
+                  className={`curved-progress-fill ${cat.isTopSeller ? 'fill-emerald' : cat.occupancyPercent < 70 ? 'fill-warn' : 'fill-blue'}`} 
+                  style={{ width: `${cat.occupancyPercent}%` }}
+                />
+              </div>
+
+              <div className="curved-cat-footer">
+                <span className="curved-occupied-text">
+                  <AnimatedCounter value={cat.occupied} /> of {cat.totalRooms} rooms occupied
+                </span>
+                <span className="curved-adr-text">
+                  ADR: <strong>₹<AnimatedCounter value={cat.averagePrice} /></strong>
+                </span>
               </div>
             </div>
           );

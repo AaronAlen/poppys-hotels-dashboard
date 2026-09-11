@@ -1,29 +1,21 @@
 import React from 'react';
 import { 
   LayoutDashboard, 
-  Building2, 
-  BedDouble, 
-  CalendarCheck2, 
-  Utensils, 
-  Users, 
-  BadgeIndianRupee, 
-  Star, 
+  MapPin, 
+  TrendingUp, 
   Sparkles, 
   BellRing, 
-  Info 
+  ShieldAlert,
+  Building2,
+  Info
 } from 'lucide-react';
 import PoppysLogo from './PoppysLogo';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
-  const navItems = [
-    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'branches', label: 'Branch Analytics', icon: Building2 },
-    { id: 'rooms', label: 'Rooms & Occupancy', icon: BedDouble },
-    { id: 'bookings', label: 'Bookings', icon: CalendarCheck2 },
-    { id: 'restaurant', label: 'Restaurant', icon: Utensils },
-    { id: 'staff', label: 'Staff', icon: Users },
-    { id: 'revenue', label: 'Revenue', icon: BadgeIndianRupee },
-    { id: 'guest-exp', label: 'Guest Experience', icon: Star },
+  const primaryNav = [
+    { id: 'overview', label: 'Executive Overview', icon: LayoutDashboard, badge: null },
+    { id: 'branches', label: 'Regional Properties & Map', icon: MapPin, badge: '8 Hotels' },
+    { id: 'forecast', label: 'Demand Forecast & Yield', icon: TrendingUp, badge: 'AI Model' },
   ];
 
   return (
@@ -33,8 +25,8 @@ export default function Sidebar({ activeTab, setActiveTab }) {
       </div>
 
       <nav className="sidebar-nav">
-        <div className="nav-group-title">OPERATIONS & ANALYTICS</div>
-        {navItems.map((item) => {
+        <div className="nav-group-title">EXECUTIVE COCKPIT</div>
+        {primaryNav.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
           return (
@@ -45,11 +37,12 @@ export default function Sidebar({ activeTab, setActiveTab }) {
             >
               <Icon size={18} strokeWidth={2} />
               <span>{item.label}</span>
+              {item.badge && <span className="nav-item-badge">{item.badge}</span>}
             </button>
           );
         })}
 
-        <div className="nav-group-title">INTELLIGENCE</div>
+        <div className="nav-group-title">STRATEGIC INTELLIGENCE</div>
         <button
           onClick={() => setActiveTab('ai-analyst')}
           className={`nav-item ai-nav-item ${activeTab === 'ai-analyst' ? 'active' : ''}`}
@@ -57,7 +50,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
           <div className="ai-sparkle-pill">
             <Sparkles size={16} />
           </div>
-          <span>AI Analyst</span>
+          <span>AI Business Advisor</span>
           <span className="badge-pulse">Live</span>
         </button>
 
@@ -66,18 +59,18 @@ export default function Sidebar({ activeTab, setActiveTab }) {
           className={`nav-item ${activeTab === 'alerts' ? 'active' : ''}`}
         >
           <BellRing size={18} />
-          <span>Alerts & Recomms</span>
-          <span className="badge-count">3</span>
+          <span>Risk & Anomaly Alerts</span>
+          <span className="badge-count">2 Active</span>
         </button>
       </nav>
 
       <div className="sidebar-footer">
         <div className="demo-tag-container">
           <span className="mock-badge">
-            <Info size={12} /> Mock / Demo Data
+            <Info size={12} /> Executive Suite
           </span>
-          <p className="footer-title">Hotel Management Dashboard</p>
-          <span className="footer-sub">v2.5 MERN Enterprise Edition</span>
+          <p className="footer-title">Poppys Group Executive</p>
+          <span className="footer-sub">Business Owner Intelligence Dashboard</span>
         </div>
       </div>
     </aside>

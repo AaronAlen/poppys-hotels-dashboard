@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poppys Hotels | Hotel Management & AI Analytics Dashboard</title>
+  <meta name="description" content="Enterprise Hotel Management & AI Analytics Business Intelligence Platform for Poppys Hotels group." />
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- App Container (16:9 Optimized Shell) -->
+  <div class="app-layout">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="brand-icon">
+            <i data-lucide="palmtree"></i>
+          </div>
+          <div class="brand-text">
+            <h2>POPPYS HOTELS</h2>
+            <span>LUXURY HOSPITALITY</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-group-title">OPERATIONS & ANALYTICS</div>
+        <a href="#overview" class="nav-item active" data-target="overview">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Overview</span>
+        </a>
+        <a href="#branches" class="nav-item" data-target="branches">
+          <i data-lucide="building-2"></i>
+          <span>Branch Analytics</span>
+        </a>
+        <a href="#rooms" class="nav-item" data-target="rooms">
+          <i data-lucide="bed-double"></i>
+          <span>Rooms & Occupancy</span>
+        </a>
+        <a href="#bookings" class="nav-item" data-target="bookings">
+          <i data-lucide="calendar-check-2"></i>
+          <span>Bookings</span>
+        </a>
+        <a href="#restaurant" class="nav-item" data-target="restaurant">
+          <i data-lucide="utensils"></i>
+          <span>Restaurant</span>
+        </a>
+        <a href="#staff" class="nav-item" data-target="staff">
+          <i data-lucide="users"></i>
+          <span>Staff</span>
+        </a>
+        <a href="#revenue" class="nav-item" data-target="revenue">
+          <i data-lucide="badge-indian-rupee"></i>
+          <span>Revenue</span>
+        </a>
+        <a href="#guest-exp" class="nav-item" data-target="guest-exp">
+          <i data-lucide="star"></i>
+          <span>Guest Experience</span>
+        </a>
+        
+        <div class="nav-group-title">INTELLIGENCE</div>
+        <a href="#ai-analyst" class="nav-item ai-nav-item" data-target="ai-analyst">
+          <div class="ai-sparkle-pill"><i data-lucide="sparkles"></i></div>
+          <span>AI Analyst</span>
+          <span class="badge-pulse">Live</span>
+        </a>
+        <a href="#alerts" class="nav-item" data-target="alerts">
+          <i data-lucide="bell-ring"></i>
+          <span>Alerts & Recomms</span>
+          <span class="badge-count">3</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="demo-tag-container">
+          <span class="mock-badge"><i data-lucide="info"></i> Mock / Demo Data</span>
+          <p class="footer-title">Hotel Management Dashboard</p>
+          <span class="footer-sub">v2.4 Enterprise Edition</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN DASHBOARD CONTENT AREA -->
+    <main class="main-content" id="main-content">
+      
+      <!-- TOP LUXURY HEADER -->
+      <header class="top-header">
+        <div class="header-overlay"></div>
+        <div class="header-inner">
+          <div class="header-welcome">
+            <div class="welcome-chip">
+              <span class="status-indicator"></span> Live Group Operations
+            </div>
+            <h1>Good Morning, Manager! <span class="wave-emoji">👋</span></h1>
+            <p class="header-subtitle">Here's your hotel performance overview across all branches.</p>
+          </div>
+
+          <!-- Header Global Filters & Profile -->
+          <div class="header-controls">
+            <!-- Filter Pills Bar -->
+            <div class="filter-group">
+              <!-- Date Range -->
+              <div class="select-wrapper">
+                <i data-lucide="calendar" class="select-icon"></i>
+                <select id="dateRangeSelect" class="custom-select" title="Date Range Selector">
+                  <option value="past7">Past 7 Days (Sep 5 - Sep 11)</option>
+                  <option value="mtd">Month to Date (Sep 2026)</option>
+                  <option value="last30">Past 30 Days</option>
+                  <option value="qtd">Quarter to Date</option>
+                </select>
+              </div>
+
+              <!-- Branch Selector -->
+              <div class="select-wrapper">
+                <i data-lucide="map-pin" class="select-icon"></i>
+                <select id="branchSelect" class="custom-select" title="Branch Selector">
+                  <option value="all">All Branches (8)</option>
+                  <option value="Madurai">Madurai (Central Hub)</option>
+                  <option value="Rameswaram">Rameswaram Beach Resort</option>
+                  <option value="Kumbakonam">Kumbakonam Heritage</option>
+                  <option value="Ooty">Ooty Mountain Retreat</option>
+                  <option value="Kodaikanal">Kodaikanal Hill Resort</option>
+                  <option value="Pondicherry">Pondicherry Coastal</option>
+                  <option value="Anaikatti">Anaikatti Jungle Lodge</option>
+                  <option value="Other">Other Properties</option>
+                </select>
+              </div>
+
+              <!-- Category Selector -->
+              <div class="select-wrapper">
+                <i data-lucide="layers" class="select-icon"></i>
+                <select id="categorySelect" class="custom-select" title="Room Category Selector">
+                  <option value="all">All Categories</option>
+                  <option value="deluxe">Deluxe Rooms</option>
+                  <option value="suite">Suites</option>
+                  <option value="premium">Premium</option>
+                  <option value="standard">Standard</option>
+                  <option value="family">Family Villas</option>
+                </select>
+              </div>
+
+              <!-- Booking Type Selector -->
+              <div class="select-wrapper">
+                <i data-lucide="ticket" class="select-icon"></i>
+                <select id="bookingTypeSelect" class="custom-select" title="Booking Type Selector">
+                  <option value="all">All Booking Types</option>
+                  <option value="direct">Direct Website (38%)</option>
+                  <option value="ota">OTA / Travel Portals (27%)</option>
+                  <option value="corporate">Corporate (14%)</option>
+                  <option value="walkin">Walk-in (12%)</option>
+                </select>
+              </div>
+
+              <!-- Room Selector -->
+              <div class="select-wrapper">
+                <i data-lucide="key" class="select-icon"></i>
+                <select id="roomStatusSelect" class="custom-select" title="Room Inventory Selector">
+                  <option value="all">All Rooms (420)</option>
+                  <option value="occupied">Occupied (329)</option>
+                  <option value="vacant">Vacant Clean (64)</option>
+                  <option value="maintenance">Maintenance (27)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Notification & Manager Profile -->
+            <div class="header-user-actions">
+              <button class="icon-button notification-btn" id="notifButton" title="System Notifications">
+                <i data-lucide="bell"></i>
+                <span class="notif-badge">3</span>
+              </button>
+
+              <div class="manager-profile" id="managerProfile">
+                <div class="avatar-ring">
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" alt="Manager Profile" class="avatar-img" />
+                </div>
+                <div class="profile-info">
+                  <span class="user-name">Rajesh Kumar</span>
+                  <span class="user-role">Group Operations VP</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Demo / Mock Data Indicator -->
+        <div class="header-mock-ribbon">
+          <i data-lucide="database"></i>
+          <span>Poppys Hotels Live Operations Sandbox &bull; Demo / Mock Data Active</span>
+        </div>
+      </header>
+
+      <!-- DASHBOARD BODY CONTAINER -->
+      <div class="dashboard-scroll-body">
+        
+        <!-- 8 PREMIUM KPI METRIC CARDS -->
+        <section class="kpi-grid" id="kpi-section">
+          <!-- 1. Total Branches -->
+          <div class="kpi-card" data-metric="branches">
+            <div class="kpi-card-header">
+              <span class="kpi-title">Total Branches</span>
+              <div class="kpi-icon-pill icon-blue">
+                <i data-lucide="building"></i>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-number" id="kpi-branches">8</span>
+              <span class="kpi-subtext">Properties</span>
+            </div>
+            <div class="kpi-footer">
+              <span class="kpi-sub">Across TN & Puducherry</span>
+              <span class="kpi-tag neutral">Active</span>
+            </div>
+          </div>
+
+          <!-- 2. Total Rooms -->
+          <div class="kpi-card" data-metric="rooms">
+            <div class="kpi-card-header">
+              <span class="kpi-title">Total Rooms</span>
+              <div class="kpi-icon-pill icon-teal">
+                <i data-lucide="bed"></i>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-number" id="kpi-rooms">420</span>
+              <span class="kpi-subtext">Keys</span>
+            </div>
+            <div class="kpi-footer">
+              <span class="kpi-sub">329 Currently Occupied</span>
+              <span class="kpi-tag success">93.6% Ready</span>
+            </div>
+          </div>
+
+          <!-- 3. Occupancy Rate -->
+          <div class="kpi-card highlight-card" data-metric="occupancy">
+            <div class="kpi-card-header">
+              <span class="kpi-title">Occupancy Rate</span>
+              <div class="kpi-icon-pill icon-emerald">
+                <i data-lucide="pie-chart"></i>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-number" id="kpi-occupancy">78.4%</span>
+              <span class="trend-badge positive">
+                <i data-lucide="trending-up"></i> 8.2%
+              </span>
+            </div>
+            <div class="kpi-footer">
+              <span class="kpi-sub">Target: 75.0% (+3.4% beat)</span>
+              <span class="kpi-tag success">Optimal</span>
+            </div>
+          </div>
+
+          <!-- 4. Revenue -->
+          <div class="kpi-card highlight-card" data-metric="revenue">
+            <div class="kpi-card-header">
+              <span class="kpi-title">Total Revenue</span>
+              <div class="kpi-icon-pill icon-gold">
+                <i data-lucide="badge-indian-rupee"></i>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-number" id="kpi-revenue">₹48.6L</span>
+              <span class="trend-badge positive">
+                <i data-lucide="trending-up"></i> 13.5%
+              </span>
+            </div>
+            <div class="kpi-footer">
+              <span class="kpi-sub">vs ₹42.8L prior 7-days</span>
+              <span class="kpi-tag success">High Pace</span>
+            </div>
+          </div>
+
+          <!-- 5. Bookings -->
+          <div class="kpi-card" data-metric="bookings">
+            <div class="kpi-card-header">
+              <span class="kpi-title">Bookings</span>
+              <div class="kpi-icon-pill icon-indigo">
+                <i data-lucide="calendar-check"></i>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-number" id="kpi-bookings">1,284</span>
+              <span class="trend-badge positive">
+                <i data-lucide="trending-up"></i> 16.5%
+              </span>
+            </div>
+            <div class="kpi-footer">
+              <span class="kpi-sub">Direct booking surge (38%)</span>
+              <span class="kpi-tag info">Strong Web</span>
+            </div>
+          </div>
+
+          <!-- 6. Food Orders -->
+          <div class="kpi-card" data-metric="food">
+            <div class="kpi-card-header">
+              <span class="kpi-title">Food Orders</span>
+              <div class="kpi-icon-pill icon-amber">
+                <i data-lucide="coffee"></i>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-number" id="kpi-food">3,842</span>
+              <span class="trend-badge positive">
+                <i data-lucide="trending-up"></i> 19.7%
+              </span>
+            </div>
+            <div class="kpi-footer">
+              <span class="kpi-sub">Avg Order Value: ₹645</span>
+              <span class="kpi-tag success">F&B Spike</span>
+            </div>
+          </div>
+
+          <!-- 7. Staff Count -->
+          <div class="kpi-card" data-metric="staff">
+            <div class="kpi-card-header">
+              <span class="kpi-title">Staff On Duty</span>
+              <div class="kpi-icon-pill icon-cyan">
+                <i data-lucide="user-check"></i>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-number" id="kpi-staff">186</span>
+              <span class="trend-badge neutral-badge">
+                <i data-lucide="trending-up"></i> 2.2%
+              </span>
+            </div>
+            <div class="kpi-footer">
+              <span class="kpi-sub">Staff/Guest Ratio 1:2.3</span>
+              <span class="kpi-tag info">Balanced</span>
+            </div>
+          </div>
+
+          <!-- 8. Guest Rating -->
+          <div class="kpi-card" data-metric="rating">
+            <div class="kpi-card-header">
+              <span class="kpi-title">Guest Rating</span>
+              <div class="kpi-icon-pill icon-yellow">
+                <i data-lucide="star"></i>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-number" id="kpi-rating">4.4 <span class="max-denom">/ 5</span></span>
+              <span class="trend-badge positive">
+                <i data-lucide="trending-up"></i> 4.8%
+              </span>
+            </div>
+            <div class="kpi-footer">
+              <span class="kpi-sub">Based on 942 recent reviews</span>
+              <span class="kpi-tag success">Excellent</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- AI ALERTS & RECOMMENDATIONS SECTION -->
+        <section class="alerts-section" id="alerts">
+          <div class="section-title-row">
+            <div class="title-with-icon">
+              <div class="alert-bell-icon"><i data-lucide="shield-alert"></i></div>
+              <div>
+                <h2>AI Alerts & Recommendations</h2>
+                <p class="section-subtext">Real-time operational anomaly detection powered by Poppys Intelligence Engine</p>
+              </div>
+            </div>
+            <span class="demo-chip">Demo AI Anomaly Detector</span>
+          </div>
+
+          <div class="alerts-grid">
+            <!-- RED Alert: High Priority -->
+            <div class="alert-card alert-high">
+              <div class="alert-header">
+                <div class="alert-badge-wrap">
+                  <span class="priority-badge red-badge"><i data-lucide="alert-triangle"></i> HIGH PRIORITY</span>
+                  <span class="alert-timestamp">42 mins ago</span>
+                </div>
+                <div class="branch-pill">Ooty Branch</div>
+              </div>
+              <h3 class="alert-title">Ooty Cancellation Rate Surge</h3>
+              <p class="alert-text">Cancellation rate increased by <strong class="text-danger">18%</strong> over the last 4 days, specifically targeting weekend mountain view villas.</p>
+              <div class="ai-recommendation-box red-rec">
+                <div class="rec-label"><i data-lucide="sparkles"></i> AI Recommendation:</div>
+                <p>"Analyze OTA bookings. Consider tightening OTA cancellation policies or converting OTA inventory to direct pre-paid packages with complimentary tea-plantation tour."</p>
+              </div>
+              <div class="alert-actions">
+                <button class="btn btn-danger-outline" onclick="triggerAlertAction('ooty')">
+                  <i data-lucide="search"></i> Analyze OTA Bookings
+                </button>
+                <button class="btn btn-ghost" onclick="dismissAlert(this)">Acknowledge</button>
+              </div>
+            </div>
+
+            <!-- YELLOW Alert: Attention Needed -->
+            <div class="alert-card alert-warning">
+              <div class="alert-header">
+                <div class="alert-badge-wrap">
+                  <span class="priority-badge yellow-badge"><i data-lucide="alert-circle"></i> ATTENTION NEEDED</span>
+                  <span class="alert-timestamp">2 hrs ago</span>
+                </div>
+                <div class="branch-pill">Kodaikanal Branch</div>
+              </div>
+              <h3 class="alert-title">Kodaikanal Weekday Occupancy</h3>
+              <p class="alert-text">Weekday occupancy dropped to <strong class="text-warning">54%</strong> despite seasonal pleasant weather and low local rainfall.</p>
+              <div class="ai-recommendation-box yellow-rec">
+                <div class="rec-label"><i data-lucide="sparkles"></i> AI Recommendation:</div>
+                <p>"Launch a targeted weekday corporate retreat package with 20% F&B voucher and complimentary lake boating pass to recover mid-week RevPAR."</p>
+              </div>
+              <div class="alert-actions">
+                <button class="btn btn-warning-outline" onclick="triggerAlertAction('kodai')">
+                  <i data-lucide="tag"></i> Launch Weekday Package
+                </button>
+                <button class="btn btn-ghost" onclick="dismissAlert(this)">Acknowledge</button>
+              </div>
+            </div>
+
+            <!-- GREEN Alert: Positive Opportunity -->
+            <div class="alert-card alert-success">
+              <div class="alert-header">
+                <div class="alert-badge-wrap">
+                  <span class="priority-badge green-badge"><i data-lucide="check-circle-2"></i> STRONG GROWTH</span>
+                  <span class="alert-timestamp">Today, 08:30 AM</span>
+                </div>
+                <div class="branch-pill">Madurai Branch</div>
+              </div>
+              <h3 class="alert-title">Madurai Revenue Outperformance</h3>
+              <p class="alert-text">Revenue increased by <strong class="text-success">+16.8%</strong> driven by Meenakshi temple heritage tours & banquet wedding events.</p>
+              <div class="ai-recommendation-box green-rec">
+                <div class="rec-label"><i data-lucide="sparkles"></i> AI Recommendation:</div>
+                <p>"Maintain current strategy. Replicate the heritage dining bundle in Kumbakonam and Rameswaram to capture regional cultural traveler demand."</p>
+              </div>
+              <div class="alert-actions">
+                <button class="btn btn-success-outline" onclick="triggerAlertAction('madurai')">
+                  <i data-lucide="trending-up"></i> Expand Strategy to Others
+                </button>
+                <button class="btn btn-ghost" onclick="dismissAlert(this)">Acknowledge</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MAIN DUAL-COLUMN OPERATIONS & AI ANALYST ROW -->
+        <div class="analytics-layout-grid">
+          
+          <!-- LEFT / CENTER COLUMN: Operations, Tables & Charts (68%) -->
+          <div class="main-column">
+            
+            <!-- SECTION 1: BRANCH-WISE PERFORMANCE TABLE -->
+            <div class="content-card" id="branches">
+              <div class="card-header-bar">
+                <div>
+                  <h3 class="card-title">Branch-wise Performance</h3>
+                  <p class="card-subtitle">Comprehensive operational metrics across all 8 Poppys properties</p>
+                </div>
+                <div class="table-actions">
+                  <span class="table-counter">Showing 8 of 8 Branches</span>
+                  <button class="btn-refresh" id="refreshTableBtn" title="Reload Table">
+                    <i data-lucide="refresh-cw"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Interactive Responsive Table -->
+              <div class="table-responsive">
+                <table class="styled-table" id="branchTable">
+                  <thead>
+                    <tr>
+                      <th onclick="sortTable(0)">Branch Property <i data-lucide="arrow-up-down" class="sort-icon"></i></th>
+                      <th onclick="sortTable(1)">Occupancy <i data-lucide="arrow-up-down" class="sort-icon"></i></th>
+                      <th onclick="sortTable(2)">Revenue <i data-lucide="arrow-up-down" class="sort-icon"></i></th>
+                      <th onclick="sortTable(3)">Bookings <i data-lucide="arrow-up-down" class="sort-icon"></i></th>
+                      <th onclick="sortTable(4)">Food Orders <i data-lucide="arrow-up-down" class="sort-icon"></i></th>
+                      <th onclick="sortTable(5)">Rating <i data-lucide="arrow-up-down" class="sort-icon"></i></th>
+                      <th onclick="sortTable(6)">Growth <i data-lucide="arrow-up-down" class="sort-icon"></i></th>
+                      <th>Operational Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Madurai -->
+                    <tr class="branch-row" data-branch="Madurai" onclick="selectBranchFromTable('Madurai')">
+                      <td>
+                        <div class="branch-cell">
+                          <div class="branch-avatar"><i data-lucide="landmark"></i></div>
+                          <div>
+                            <strong>Madurai</strong>
+                            <span class="cell-sub">Central Hub & Banquets</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="progress-cell">
+                          <div class="bar-bg"><div class="bar-fill green-bar" style="width: 84.2%;"></div></div>
+                          <span>84.2%</span>
+                        </div>
+                      </td>
+                      <td><span class="cell-value">₹11.2L</span></td>
+                      <td>298</td>
+                      <td>940</td>
+                      <td>
+                        <div class="rating-cell">
+                          <i data-lucide="star" class="star-icon"></i> 4.6
+                        </div>
+                      </td>
+                      <td><span class="growth-badge positive">↑ 16.8%</span></td>
+                      <td><span class="status-pill status-strong">Strong Performance</span></td>
+                    </tr>
+
+                    <!-- Rameswaram -->
+                    <tr class="branch-row" data-branch="Rameswaram" onclick="selectBranchFromTable('Rameswaram')">
+                      <td>
+                        <div class="branch-cell">
+                          <div class="branch-avatar"><i data-lucide="waves"></i></div>
+                          <div>
+                            <strong>Rameswaram</strong>
+                            <span class="cell-sub">Beach Resort & Pilgrimage</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="progress-cell">
+                          <div class="bar-bg"><div class="bar-fill green-bar" style="width: 79.5%;"></div></div>
+                          <span>79.5%</span>
+                        </div>
+                      </td>
+                      <td><span class="cell-value">₹8.4L</span></td>
+                      <td>215</td>
+                      <td>620</td>
+                      <td>
+                        <div class="rating-cell">
+                          <i data-lucide="star" class="star-icon"></i> 4.5
+                        </div>
+                      </td>
+                      <td><span class="growth-badge positive">↑ 12.1%</span></td>
+                      <td><span class="status-pill status-strong">Strong Performance</span></td>
+                    </tr>
+
+                    <!-- Kumbakonam -->
+                    <tr class="branch-row" data-branch="Kumbakonam" onclick="selectBranchFromTable('Kumbakonam')">
+                      <td>
+                        <div class="branch-cell">
+                          <div class="branch-avatar"><i data-lucide="sun"></i></div>
+                          <div>
+                            <strong>Kumbakonam</strong>
+                            <span class="cell-sub">Heritage & Temple Sanctuary</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="progress-cell">
+                          <div class="bar-bg"><div class="bar-fill blue-bar" style="width: 74.1%;"></div></div>
+                          <span>74.1%</span>
+                        </div>
+                      </td>
+                      <td><span class="cell-value">₹5.8L</span></td>
+                      <td>162</td>
+                      <td>485</td>
+                      <td>
+                        <div class="rating-cell">
+                          <i data-lucide="star" class="star-icon"></i> 4.3
+                        </div>
+                      </td>
+                      <td><span class="growth-badge positive">↑ 9.4%</span></td>
+                      <td><span class="status-pill status-moderate">Moderate</span></td>
+                    </tr>
+
+                    <!-- Ooty -->
+                    <tr class="branch-row attention-row" data-branch="Ooty" onclick="selectBranchFromTable('Ooty')">
+                      <td>
+                        <div class="branch-cell">
+                          <div class="branch-avatar"><i data-lucide="mountain-snow"></i></div>
+                          <div>
+                            <strong>Ooty</strong>
+                            <span class="cell-sub">Mountain Retreat & Villas</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="progress-cell">
+                          <div class="bar-bg"><div class="bar-fill red-bar" style="width: 71.2%;"></div></div>
+                          <span>71.2%</span>
+                        </div>
+                      </td>
+                      <td><span class="cell-value">₹7.1L</span></td>
+                      <td>194</td>
+                      <td>530</td>
+                      <td>
+                        <div class="rating-cell">
+                          <i data-lucide="star" class="star-icon"></i> 4.2
+                        </div>
+                      </td>
+                      <td><span class="growth-badge negative">↓ -3.5%</span></td>
+                      <td><span class="status-pill status-attention">Needs Attention</span></td>
+                    </tr>
+
+                    <!-- Kodaikanal -->
+                    <tr class="branch-row attention-row" data-branch="Kodaikanal" onclick="selectBranchFromTable('Kodaikanal')">
+                      <td>
+                        <div class="branch-cell">
+                          <div class="branch-avatar"><i data-lucide="trees"></i></div>
+                          <div>
+                            <strong>Kodaikanal</strong>
+                            <span class="cell-sub">Hill Station Resort</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="progress-cell">
+                          <div class="bar-bg"><div class="bar-fill orange-bar" style="width: 58.4%;"></div></div>
+                          <span>58.4%</span>
+                        </div>
+                      </td>
+                      <td><span class="cell-value">₹4.9L</span></td>
+                      <td>138</td>
+                      <td>410</td>
+                      <td>
+                        <div class="rating-cell">
+                          <i data-lucide="star" class="star-icon"></i> 4.1
+                        </div>
+                      </td>
+                      <td><span class="growth-badge negative">↓ -6.2%</span></td>
+                      <td><span class="status-pill status-attention">Needs Attention</span></td>
+                    </tr>
+
+                    <!-- Pondicherry -->
+                    <tr class="branch-row" data-branch="Pondicherry" onclick="selectBranchFromTable('Pondicherry')">
+                      <td>
+                        <div class="branch-cell">
+                          <div class="branch-avatar"><i data-lucide="anchor"></i></div>
+                          <div>
+                            <strong>Pondicherry</strong>
+                            <span class="cell-sub">French Quarter Boutique</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="progress-cell">
+                          <div class="bar-bg"><div class="bar-fill green-bar" style="width: 82.6%;"></div></div>
+                          <span>82.6%</span>
+                        </div>
+                      </td>
+                      <td><span class="cell-value">₹6.7L</span></td>
+                      <td>175</td>
+                      <td>512</td>
+                      <td>
+                        <div class="rating-cell">
+                          <i data-lucide="star" class="star-icon"></i> 4.7
+                        </div>
+                      </td>
+                      <td><span class="growth-badge positive">↑ 14.3%</span></td>
+                      <td><span class="status-pill status-strong">Strong Performance</span></td>
+                    </tr>
+
+                    <!-- Anaikatti -->
+                    <tr class="branch-row" data-branch="Anaikatti" onclick="selectBranchFromTable('Anaikatti')">
+                      <td>
+                        <div class="branch-cell">
+                          <div class="branch-avatar"><i data-lucide="compass"></i></div>
+                          <div>
+                            <strong>Anaikatti</strong>
+                            <span class="cell-sub">Jungle Valley Eco-Resort</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="progress-cell">
+                          <div class="bar-bg"><div class="bar-fill blue-bar" style="width: 69.8%;"></div></div>
+                          <span>69.8%</span>
+                        </div>
+                      </td>
+                      <td><span class="cell-value">₹3.1L</span></td>
+                      <td>82</td>
+                      <td>260</td>
+                      <td>
+                        <div class="rating-cell">
+                          <i data-lucide="star" class="star-icon"></i> 4.4
+                        </div>
+                      </td>
+                      <td><span class="growth-badge positive">↑ 5.6%</span></td>
+                      <td><span class="status-pill status-improving">Improving</span></td>
+                    </tr>
+
+                    <!-- Other -->
+                    <tr class="branch-row" data-branch="Other" onclick="selectBranchFromTable('Other')">
+                      <td>
+                        <div class="branch-cell">
+                          <div class="branch-avatar"><i data-lucide="building"></i></div>
+                          <div>
+                            <strong>Other Properties</strong>
+                            <span class="cell-sub">Transit & Managed Units</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="progress-cell">
+                          <div class="bar-bg"><div class="bar-fill blue-bar" style="width: 64.0%;"></div></div>
+                          <span>64.0%</span>
+                        </div>
+                      </td>
+                      <td><span class="cell-value">₹1.4L</span></td>
+                      <td>20</td>
+                      <td>85</td>
+                      <td>
+                        <div class="rating-cell">
+                          <i data-lucide="star" class="star-icon"></i> 4.2
+                        </div>
+                      </td>
+                      <td><span class="growth-badge positive">↑ 3.0%</span></td>
+                      <td><span class="status-pill status-moderate">Stable</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="table-footer-hint">
+                <span>💡 Click on any branch row to isolate property analytics or drill down into room/F&B specifics.</span>
+              </div>
+            </div>
+
+            <!-- SECTION 2: CHARTS DUAL-GRID (Revenue Bar + Occupancy Trend Line) -->
+            <div class="charts-dual-grid">
+              
+              <!-- Branch Revenue Comparison (Vertical Bar Chart) -->
+              <div class="content-card">
+                <div class="card-header-bar">
+                  <div>
+                    <h3 class="card-title">Branch Revenue Comparison</h3>
+                    <p class="card-subtitle">Current 7-day revenue comparison across branches (₹ Lakhs)</p>
+                  </div>
+                  <span class="chart-tag">₹48.6L Total</span>
+                </div>
+                <div class="chart-canvas-wrapper">
+                  <canvas id="branchRevenueChart"></canvas>
+                </div>
+              </div>
+
+              <!-- Occupancy Rate Trend (7-day Line Chart This Week vs Last Week) -->
+              <div class="content-card">
+                <div class="card-header-bar">
+                  <div>
+                    <h3 class="card-title">Occupancy Rate Trend</h3>
+                    <p class="card-subtitle">7-day performance comparison: This Week vs Last Week</p>
+                  </div>
+                  <div class="legend-custom">
+                    <span class="legend-item"><span class="dot dot-primary"></span> This Week (78.4%)</span>
+                    <span class="legend-item"><span class="dot dot-gray"></span> Last Week (70.2%)</span>
+                  </div>
+                </div>
+                <div class="chart-canvas-wrapper">
+                  <canvas id="occupancyTrendChart"></canvas>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- SECTION 3: BOOKING ANALYTICS & REVENUE BREAKDOWN (Donut Charts & Trends) -->
+            <div class="charts-dual-grid" id="bookings">
+              
+              <!-- Booking Type Analysis -->
+              <div class="content-card">
+                <div class="card-header-bar">
+                  <div>
+                    <h3 class="card-title">Booking Type Analysis</h3>
+                    <p class="card-subtitle">Channel distribution & 7-day volume pace</p>
+                  </div>
+                  <span class="channel-pill">1,284 Bookings</span>
+                </div>
+                
+                <div class="donut-with-details">
+                  <div class="donut-canvas-container">
+                    <canvas id="bookingTypeChart"></canvas>
+                  </div>
+                  <div class="channel-breakdown-list">
+                    <div class="channel-item">
+                      <span class="ch-color ch-blue"></span>
+                      <span class="ch-name">Direct Website</span>
+                      <span class="ch-pct">38%</span>
+                      <span class="ch-val">488 bks</span>
+                    </div>
+                    <div class="channel-item">
+                      <span class="ch-color ch-teal"></span>
+                      <span class="ch-name">OTA Portals</span>
+                      <span class="ch-pct">27%</span>
+                      <span class="ch-val">347 bks</span>
+                    </div>
+                    <div class="channel-item">
+                      <span class="ch-color ch-indigo"></span>
+                      <span class="ch-name">Corporate</span>
+                      <span class="ch-pct">14%</span>
+                      <span class="ch-val">180 bks</span>
+                    </div>
+                    <div class="channel-item">
+                      <span class="ch-color ch-amber"></span>
+                      <span class="ch-name">Walk-in</span>
+                      <span class="ch-pct">12%</span>
+                      <span class="ch-val">154 bks</span>
+                    </div>
+                    <div class="channel-item">
+                      <span class="ch-color ch-purple"></span>
+                      <span class="ch-name">Travel Agent</span>
+                      <span class="ch-pct">6%</span>
+                      <span class="ch-val">77 bks</span>
+                    </div>
+                    <div class="channel-item">
+                      <span class="ch-color ch-slate"></span>
+                      <span class="ch-name">Other</span>
+                      <span class="ch-pct">3%</span>
+                      <span class="ch-val">38 bks</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 7-day Booking Pace Mini Bar Chart -->
+                <div class="booking-pace-subcard">
+                  <div class="pace-header">
+                    <span>7-Day Daily Booking Volume Pace</span>
+                    <strong>+16.5% WoW Growth</strong>
+                  </div>
+                  <div class="pace-canvas-wrapper">
+                    <canvas id="bookingPaceChart"></canvas>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Revenue Breakdown -->
+              <div class="content-card" id="revenue">
+                <div class="card-header-bar">
+                  <div>
+                    <h3 class="card-title">Revenue Breakdown</h3>
+                    <p class="card-subtitle">Operational revenue streams for Poppys group</p>
+                  </div>
+                  <span class="badge-total">₹48.6L</span>
+                </div>
+
+                <div class="donut-with-details">
+                  <div class="donut-canvas-container">
+                    <canvas id="revenueBreakdownChart"></canvas>
+                  </div>
+                  <div class="channel-breakdown-list">
+                    <div class="channel-item">
+                      <span class="ch-color ch-navy"></span>
+                      <span class="ch-name">Rooms</span>
+                      <span class="ch-pct">64.2%</span>
+                      <span class="ch-val">₹31.2L</span>
+                    </div>
+                    <div class="channel-item">
+                      <span class="ch-color ch-amber"></span>
+                      <span class="ch-name">Restaurant & F&B</span>
+                      <span class="ch-pct">19.3%</span>
+                      <span class="ch-val">₹9.4L</span>
+                    </div>
+                    <div class="channel-item">
+                      <span class="ch-color ch-teal"></span>
+                      <span class="ch-name">Events & Banquets</span>
+                      <span class="ch-pct">8.4%</span>
+                      <span class="ch-val">₹4.1L</span>
+                    </div>
+                    <div class="channel-item">
+                      <span class="ch-color ch-slate"></span>
+                      <span class="ch-name">Other Services</span>
+                      <span class="ch-pct">8.0%</span>
+                      <span class="ch-val">₹3.9L</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="rev-summary-banner">
+                  <i data-lucide="badge-percent"></i>
+                  <div>
+                    <strong>RevPAR (Revenue per Available Room): ₹1,653</strong>
+                    <p>Average Daily Rate (ADR): ₹4,820 &bull; Banquet utilization up 22%</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- SECTION 4: ROOM CATEGORY ANALYTICS -->
+            <div class="content-card" id="rooms">
+              <div class="card-header-bar">
+                <div>
+                  <h3 class="card-title">Room Category Analysis</h3>
+                  <p class="card-subtitle">Inventory distribution, average rates and yield by category</p>
+                </div>
+                <div class="highlight-pill">
+                  <i data-lucide="trophy"></i> Most Revenue Generating: <strong>Deluxe (₹19.2L)</strong>
+                </div>
+              </div>
+
+              <div class="category-cards-grid">
+                <!-- Standard -->
+                <div class="category-card">
+                  <div class="cat-header">
+                    <span class="cat-name">Standard</span>
+                    <span class="cat-rooms">110 Rooms</span>
+                  </div>
+                  <div class="cat-occ">
+                    <span class="cat-occ-label">Occupancy: <strong>74.5%</strong></span>
+                    <span class="cat-count">82 / 110</span>
+                  </div>
+                  <div class="cat-progress"><div class="cat-progress-fill" style="width: 74.5%;"></div></div>
+                  <div class="cat-meta-row">
+                    <div>
+                      <span class="meta-label">Avg Price</span>
+                      <span class="meta-value">₹3,200</span>
+                    </div>
+                    <div>
+                      <span class="meta-label">Revenue</span>
+                      <span class="meta-value">₹7.8L</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Deluxe (Star Performer) -->
+                <div class="category-card featured-category">
+                  <div class="cat-header">
+                    <span class="cat-name">Deluxe <span class="badge-star"><i data-lucide="sparkles"></i> Top Seller</span></span>
+                    <span class="cat-rooms">160 Rooms</span>
+                  </div>
+                  <div class="cat-occ">
+                    <span class="cat-occ-label">Occupancy: <strong class="text-success">83.8%</strong></span>
+                    <span class="cat-count">134 / 160</span>
+                  </div>
+                  <div class="cat-progress"><div class="cat-progress-fill success-fill" style="width: 83.8%;"></div></div>
+                  <div class="cat-meta-row">
+                    <div>
+                      <span class="meta-label">Avg Price</span>
+                      <span class="meta-value">₹4,800</span>
+                    </div>
+                    <div>
+                      <span class="meta-label">Revenue</span>
+                      <span class="meta-value text-success">₹19.2L</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Premium -->
+                <div class="category-card">
+                  <div class="cat-header">
+                    <span class="cat-name">Premium</span>
+                    <span class="cat-rooms">80 Rooms</span>
+                  </div>
+                  <div class="cat-occ">
+                    <span class="cat-occ-label">Occupancy: <strong>76.3%</strong></span>
+                    <span class="cat-count">61 / 80</span>
+                  </div>
+                  <div class="cat-progress"><div class="cat-progress-fill" style="width: 76.3%;"></div></div>
+                  <div class="cat-meta-row">
+                    <div>
+                      <span class="meta-label">Avg Price</span>
+                      <span class="meta-value">₹6,500</span>
+                    </div>
+                    <div>
+                      <span class="meta-label">Revenue</span>
+                      <span class="meta-value">₹11.8L</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Suite -->
+                <div class="category-card">
+                  <div class="cat-header">
+                    <span class="cat-name">Suite</span>
+                    <span class="cat-rooms">40 Rooms</span>
+                  </div>
+                  <div class="cat-occ">
+                    <span class="cat-occ-label">Occupancy: <strong>80.0%</strong></span>
+                    <span class="cat-count">32 / 40</span>
+                  </div>
+                  <div class="cat-progress"><div class="cat-progress-fill" style="width: 80.0%;"></div></div>
+                  <div class="cat-meta-row">
+                    <div>
+                      <span class="meta-label">Avg Price</span>
+                      <span class="meta-value">₹10,500</span>
+                    </div>
+                    <div>
+                      <span class="meta-label">Revenue</span>
+                      <span class="meta-value">₹10.1L</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Family -->
+                <div class="category-card">
+                  <div class="cat-header">
+                    <span class="cat-name">Family Villa</span>
+                    <span class="cat-rooms">30 Rooms</span>
+                  </div>
+                  <div class="cat-occ">
+                    <span class="cat-occ-label">Occupancy: <strong>66.7%</strong></span>
+                    <span class="cat-count">20 / 30</span>
+                  </div>
+                  <div class="cat-progress"><div class="cat-progress-fill warn-fill" style="width: 66.7%;"></div></div>
+                  <div class="cat-meta-row">
+                    <div>
+                      <span class="meta-label">Avg Price</span>
+                      <span class="meta-value">₹7,200</span>
+                    </div>
+                    <div>
+                      <span class="meta-label">Revenue</span>
+                      <span class="meta-value">₹4.3L</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 5: FOOD & RESTAURANT ANALYTICS -->
+            <div class="content-card" id="restaurant">
+              <div class="card-header-bar">
+                <div>
+                  <h3 class="card-title">Food & Restaurant Analytics</h3>
+                  <p class="card-subtitle">F&B revenue insights, order spikes and popular dining selections</p>
+                </div>
+                <div class="cuisine-tag-group">
+                  <span class="cuisine-pill active">All Outlets</span>
+                  <span class="cuisine-pill">South Indian</span>
+                  <span class="cuisine-pill">North Indian</span>
+                  <span class="cuisine-pill">Chinese</span>
+                  <span class="cuisine-pill">Continental</span>
+                  <span class="cuisine-pill">Beverages</span>
+                  <span class="cuisine-pill">Desserts</span>
+                </div>
+              </div>
+
+              <div class="restaurant-dual-grid">
+                <!-- Bar Chart: Past Week Orders -->
+                <div class="fb-chart-pane">
+                  <div class="fb-header">
+                    <span class="fb-sub-title"><i data-lucide="bar-chart-2"></i> Past Week Daily Orders (3,842 Total)</span>
+                    <span class="sat-peak-badge">Saturday Peak: 782 Orders</span>
+                  </div>
+                  <div class="chart-canvas-wrapper-fb">
+                    <canvas id="restaurantOrdersChart"></canvas>
+                  </div>
+                </div>
+
+                <!-- Top Food Items Ranking -->
+                <div class="fb-ranking-pane">
+                  <span class="fb-sub-title"><i data-lucide="award"></i> Top 5 Food Items Ordered</span>
+                  
+                  <div class="top-dishes-list">
+                    <!-- Item 1: Biryani -->
+                    <div class="dish-item">
+                      <div class="dish-rank">1</div>
+                      <div class="dish-info">
+                        <div class="dish-name-row">
+                          <span class="dish-title">Poppys Signature Chicken Biryani</span>
+                          <span class="dish-count">428 orders</span>
+                        </div>
+                        <div class="dish-progress"><div class="dish-fill" style="width: 100%;"></div></div>
+                      </div>
+                    </div>
+
+                    <!-- Item 2: Masala Dosa -->
+                    <div class="dish-item">
+                      <div class="dish-rank">2</div>
+                      <div class="dish-info">
+                        <div class="dish-name-row">
+                          <span class="dish-title">Crispy Ghee Masala Dosa</span>
+                          <span class="dish-count">371 orders</span>
+                        </div>
+                        <div class="dish-progress"><div class="dish-fill" style="width: 86%;"></div></div>
+                      </div>
+                    </div>
+
+                    <!-- Item 3: Parotta -->
+                    <div class="dish-item">
+                      <div class="dish-rank">3</div>
+                      <div class="dish-info">
+                        <div class="dish-name-row">
+                          <span class="dish-title">Madurai Bun Parotta & Salna</span>
+                          <span class="dish-count">318 orders</span>
+                        </div>
+                        <div class="dish-progress"><div class="dish-fill" style="width: 74%;"></div></div>
+                      </div>
+                    </div>
+
+                    <!-- Item 4: Paneer Butter Masala -->
+                    <div class="dish-item">
+                      <div class="dish-rank">4</div>
+                      <div class="dish-info">
+                        <div class="dish-name-row">
+                          <span class="dish-title">Paneer Butter Masala</span>
+                          <span class="dish-count">286 orders</span>
+                        </div>
+                        <div class="dish-progress"><div class="dish-fill" style="width: 66%;"></div></div>
+                      </div>
+                    </div>
+
+                    <!-- Item 5: Fresh Juice -->
+                    <div class="dish-item">
+                      <div class="dish-rank">5</div>
+                      <div class="dish-info">
+                        <div class="dish-name-row">
+                          <span class="dish-title">Fresh Cold-Pressed Juices</span>
+                          <span class="dish-count">251 orders</span>
+                        </div>
+                        <div class="dish-progress"><div class="dish-fill" style="width: 58%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 6: STAFF ANALYTICS & GUEST EXPERIENCE DUAL -->
+            <div class="charts-dual-grid" id="staff">
+              
+              <!-- Staff Analytics -->
+              <div class="content-card">
+                <div class="card-header-bar">
+                  <div>
+                    <h3 class="card-title">Staff Analytics</h3>
+                    <p class="card-subtitle">Active headcount: 186 Staff across 6 operational wings</p>
+                  </div>
+                  <span class="staff-ratio-badge">Staff/Guest Ratio 1:2.3</span>
+                </div>
+
+                <div class="staff-layout">
+                  <div class="staff-donut-container">
+                    <canvas id="staffBreakdownChart"></canvas>
+                  </div>
+                  <div class="staff-dept-grid">
+                    <div class="dept-box">
+                      <span class="dept-title">Housekeeping</span>
+                      <strong class="dept-count">62</strong>
+                      <span class="dept-pct">33.3%</span>
+                    </div>
+                    <div class="dept-box">
+                      <span class="dept-title">Kitchen & Chefs</span>
+                      <strong class="dept-count">38</strong>
+                      <span class="dept-pct">20.4%</span>
+                    </div>
+                    <div class="dept-box">
+                      <span class="dept-title">Restaurant / F&B</span>
+                      <strong class="dept-count">31</strong>
+                      <span class="dept-pct">16.7%</span>
+                    </div>
+                    <div class="dept-box">
+                      <span class="dept-title">Front Office</span>
+                      <strong class="dept-count">29</strong>
+                      <span class="dept-pct">15.6%</span>
+                    </div>
+                    <div class="dept-box">
+                      <span class="dept-title">Maintenance & Eng</span>
+                      <strong class="dept-count">18</strong>
+                      <span class="dept-pct">9.7%</span>
+                    </div>
+                    <div class="dept-box">
+                      <span class="dept-title">Management</span>
+                      <strong class="dept-count">8</strong>
+                      <span class="dept-pct">4.3%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Guest Experience & Satisfaction -->
+              <div class="content-card" id="guest-exp">
+                <div class="card-header-bar">
+                  <div>
+                    <h3 class="card-title">Guest Experience</h3>
+                    <p class="card-subtitle">CSAT performance & guest feedback sentiment</p>
+                  </div>
+                  <div class="overall-csat">
+                    <span class="csat-number">4.4</span>
+                    <div class="csat-stars">
+                      <i data-lucide="star" class="fill-gold"></i>
+                      <i data-lucide="star" class="fill-gold"></i>
+                      <i data-lucide="star" class="fill-gold"></i>
+                      <i data-lucide="star" class="fill-gold"></i>
+                      <i data-lucide="star-half" class="fill-gold"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Criteria Rating Bars -->
+                <div class="criteria-list">
+                  <div class="crit-row">
+                    <span class="crit-name">Cleanliness</span>
+                    <div class="crit-bar"><div class="crit-fill" style="width: 92%;"></div></div>
+                    <span class="crit-score">4.6</span>
+                  </div>
+                  <div class="crit-row">
+                    <span class="crit-name">Room Quality</span>
+                    <div class="crit-bar"><div class="crit-fill" style="width: 90%;"></div></div>
+                    <span class="crit-score">4.5</span>
+                  </div>
+                  <div class="crit-row">
+                    <span class="crit-name">Staff Courtesy</span>
+                    <div class="crit-bar"><div class="crit-fill" style="width: 90%;"></div></div>
+                    <span class="crit-score">4.5</span>
+                  </div>
+                  <div class="crit-row">
+                    <span class="crit-name">Food & Dining</span>
+                    <div class="crit-bar"><div class="crit-fill" style="width: 86%;"></div></div>
+                    <span class="crit-score">4.3</span>
+                  </div>
+                  <div class="crit-row">
+                    <span class="crit-name">Service & Speed</span>
+                    <div class="crit-bar"><div class="crit-fill" style="width: 84%;"></div></div>
+                    <span class="crit-score">4.2</span>
+                  </div>
+                </div>
+
+                <!-- Sentiment Tags: Positive vs Improvement -->
+                <div class="feedback-chips-box">
+                  <div class="feedback-group">
+                    <span class="feedback-label pos"><i data-lucide="thumbs-up"></i> Top Positive Mentions:</span>
+                    <div class="chip-container">
+                      <span class="chip chip-green">Clean rooms</span>
+                      <span class="chip chip-green">Friendly staff</span>
+                      <span class="chip chip-green">Good location</span>
+                      <span class="chip chip-green">Scenic hills view</span>
+                    </div>
+                  </div>
+                  <div class="feedback-group">
+                    <span class="feedback-label neg"><i data-lucide="alert-circle"></i> Needs Improvement:</span>
+                    <div class="chip-container">
+                      <span class="chip chip-orange">Check-in waiting time</span>
+                      <span class="chip chip-orange">Restaurant waiting time</span>
+                      <span class="chip chip-orange">Parking availability</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- SECTION 7: AI OCCUPANCY FORECAST -->
+            <div class="content-card">
+              <div class="card-header-bar">
+                <div>
+                  <div class="title-with-pill">
+                    <h3 class="card-title">Occupancy Forecast — AI Prediction</h3>
+                    <span class="ai-chip"><i data-lucide="sparkles"></i> Machine Learning Forecast</span>
+                  </div>
+                  <p class="card-subtitle">Next 7 days predictive occupancy modeling & demand surge detection</p>
+                </div>
+                <span class="mock-tag">Demo AI Prediction / Mock Data</span>
+              </div>
+
+              <div class="forecast-content-wrapper">
+                <!-- 7 Day Forecast Cards -->
+                <div class="forecast-cards-row">
+                  <div class="forecast-day-card">
+                    <span class="day-label">Today</span>
+                    <span class="day-pct">78%</span>
+                    <span class="day-status">Moderate</span>
+                  </div>
+                  <div class="forecast-day-card">
+                    <span class="day-label">Tomorrow</span>
+                    <span class="day-pct">81%</span>
+                    <span class="day-status">Rising</span>
+                  </div>
+                  <div class="forecast-day-card peak-forecast">
+                    <span class="peak-tag">PEAK</span>
+                    <span class="day-label">Saturday</span>
+                    <span class="day-pct text-emerald">92%</span>
+                    <span class="day-status">Near Capacity</span>
+                  </div>
+                  <div class="forecast-day-card high-forecast">
+                    <span class="day-label">Sunday</span>
+                    <span class="day-pct">88%</span>
+                    <span class="day-status">High Inflow</span>
+                  </div>
+                  <div class="forecast-day-card">
+                    <span class="day-label">Monday</span>
+                    <span class="day-pct">63%</span>
+                    <span class="day-status">Check-out Dip</span>
+                  </div>
+                  <div class="forecast-day-card low-forecast">
+                    <span class="day-label">Tuesday</span>
+                    <span class="day-pct">59%</span>
+                    <span class="day-status">Mid-week Low</span>
+                  </div>
+                  <div class="forecast-day-card">
+                    <span class="day-label">Wednesday</span>
+                    <span class="day-pct">68%</span>
+                    <span class="day-status">Recovery</span>
+                  </div>
+                </div>
+
+                <!-- AI Recommendation Callout Banner -->
+                <div class="forecast-rec-banner">
+                  <div class="rec-icon-box"><i data-lucide="lightbulb"></i></div>
+                  <div class="rec-text-wrap">
+                    <strong>AI Strategic Recommendation:</strong>
+                    <p>"High weekend demand predicted (Saturday 92%, Sunday 88%). Consider increasing room/package availability, activating minimum 2-night stay policy on Deluxe & Suites, and pre-assigning housekeeping shifts for the Friday-Saturday turnover."</p>
+                  </div>
+                  <button class="btn btn-primary-sm" onclick="applyYieldRules()">
+                    <i data-lucide="sliders"></i> Apply Dynamic Pricing
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 8: BRANCH MAP (TAMIL NADU & SOUTH INDIA) -->
+            <div class="content-card">
+              <div class="card-header-bar">
+                <div>
+                  <h3 class="card-title">Branch Locations & Regional Presence</h3>
+                  <p class="card-subtitle">Interactive geographical performance view of Poppys Hotels in Tamil Nadu & Puducherry</p>
+                </div>
+                <!-- Map Legend -->
+                <div class="map-legend">
+                  <span class="leg-item"><span class="leg-dot dot-strong"></span> Strong Performance</span>
+                  <span class="leg-item"><span class="leg-dot dot-warn"></span> Needs Attention</span>
+                  <span class="leg-item"><span class="leg-dot dot-moderate"></span> Moderate / Improving</span>
+                </div>
+              </div>
+
+              <div class="map-layout-wrapper">
+                <!-- Custom Stylized Interactive SVG Map of Tamil Nadu & Puducherry -->
+                <div class="svg-map-container" id="tamilNaduMapContainer">
+                  <svg viewBox="0 0 650 540" class="tn-svg-map" id="tnSvgMap">
+                    <defs>
+                      <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="3" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                      </filter>
+                    </defs>
+
+                    <!-- Stylized Tamil Nadu Boundary Silhouette -->
+                    <path class="state-boundary" d="M 180,60 
+                             C 240,40 340,50 420,70 
+                             C 450,110 460,170 450,220 
+                             C 480,260 460,330 430,370 
+                             C 390,440 330,490 280,510 
+                             C 250,510 220,470 200,430 
+                             C 180,390 140,350 130,290 
+                             C 120,240 140,170 150,130 
+                             Z" />
+
+                    <!-- Coastline Accent -->
+                    <path class="coastline-accent" d="M 420,70 C 450,110 460,170 450,220 C 480,260 460,330 430,370 C 390,440 330,490 280,510" />
+
+                    <!-- Map Pin 1: Madurai (Green - Strong) -->
+                    <g class="map-pin-group" data-pin="Madurai" transform="translate(290, 360)" onclick="selectBranchFromMap('Madurai')">
+                      <circle class="pin-ripple ripple-green" r="14"></circle>
+                      <circle class="pin-core pin-green" r="7"></circle>
+                      <text x="12" y="4" class="pin-label">Madurai (84.2%)</text>
+                    </g>
+
+                    <!-- Map Pin 2: Rameswaram (Green - Strong) -->
+                    <g class="map-pin-group" data-pin="Rameswaram" transform="translate(390, 420)" onclick="selectBranchFromMap('Rameswaram')">
+                      <circle class="pin-ripple ripple-green" r="14"></circle>
+                      <circle class="pin-core pin-green" r="7"></circle>
+                      <text x="12" y="4" class="pin-label">Rameswaram (79.5%)</text>
+                    </g>
+
+                    <!-- Map Pin 3: Kumbakonam (Blue - Moderate) -->
+                    <g class="map-pin-group" data-pin="Kumbakonam" transform="translate(370, 260)" onclick="selectBranchFromMap('Kumbakonam')">
+                      <circle class="pin-ripple ripple-blue" r="14"></circle>
+                      <circle class="pin-core pin-blue" r="7"></circle>
+                      <text x="12" y="4" class="pin-label">Kumbakonam (74.1%)</text>
+                    </g>
+
+                    <!-- Map Pin 4: Ooty (Red - Needs Attention) -->
+                    <g class="map-pin-group" data-pin="Ooty" transform="translate(175, 230)" onclick="selectBranchFromMap('Ooty')">
+                      <circle class="pin-ripple ripple-red" r="14"></circle>
+                      <circle class="pin-core pin-red" r="7"></circle>
+                      <text x="12" y="4" class="pin-label label-red">Ooty (71.2% - Alert)</text>
+                    </g>
+
+                    <!-- Map Pin 5: Kodaikanal (Orange - Needs Attention) -->
+                    <g class="map-pin-group" data-pin="Kodaikanal" transform="translate(230, 330)" onclick="selectBranchFromMap('Kodaikanal')">
+                      <circle class="pin-ripple ripple-orange" r="14"></circle>
+                      <circle class="pin-core pin-orange" r="7"></circle>
+                      <text x="12" y="4" class="pin-label label-orange">Kodaikanal (58.4%)</text>
+                    </g>
+
+                    <!-- Map Pin 6: Pondicherry (Green - Strong) -->
+                    <g class="map-pin-group" data-pin="Pondicherry" transform="translate(425, 185)" onclick="selectBranchFromMap('Pondicherry')">
+                      <circle class="pin-ripple ripple-green" r="14"></circle>
+                      <circle class="pin-core pin-green" r="7"></circle>
+                      <text x="12" y="4" class="pin-label">Pondicherry (82.6%)</text>
+                    </g>
+
+                    <!-- Map Pin 7: Anaikatti (Blue - Improving) -->
+                    <g class="map-pin-group" data-pin="Anaikatti" transform="translate(195, 275)" onclick="selectBranchFromMap('Anaikatti')">
+                      <circle class="pin-ripple ripple-blue" r="14"></circle>
+                      <circle class="pin-core pin-blue" r="7"></circle>
+                      <text x="12" y="4" class="pin-label">Anaikatti (69.8%)</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <!-- Map Info Sidebar Card -->
+                <div class="map-selected-info" id="mapBranchDetails">
+                  <div class="selected-head">
+                    <span class="info-kicker">SELECTED PROPERTY</span>
+                    <h4 id="selectedBranchTitle">Madurai Hub</h4>
+                    <span class="status-pill status-strong" id="selectedBranchBadge">Strong Performance</span>
+                  </div>
+                  <div class="branch-metrics-mini">
+                    <div class="metric-mini">
+                      <span>Occupancy</span>
+                      <strong id="selectedBranchOcc">84.2%</strong>
+                    </div>
+                    <div class="metric-mini">
+                      <span>Revenue</span>
+                      <strong id="selectedBranchRev">₹11.2L</strong>
+                    </div>
+                    <div class="metric-mini">
+                      <span>Bookings</span>
+                      <strong id="selectedBranchBks">298</strong>
+                    </div>
+                    <div class="metric-mini">
+                      <span>Rating</span>
+                      <strong id="selectedBranchRate">4.6 ⭐</strong>
+                    </div>
+                  </div>
+                  <div class="branch-quick-tip" id="selectedBranchNotes">
+                    <i data-lucide="sparkles"></i>
+                    <span>"Leading group revenue with high banquet bookings and temple pilgrimage guests."</span>
+                  </div>
+                  <button class="btn btn-outline-full" id="filterByBranchBtn" onclick="filterDashboardBySelectedBranch()">
+                    Filter Dashboard to This Branch
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: AI HOTEL ANALYST INTERACTIVE AGENT (32%) -->
+          <div class="ai-column" id="ai-analyst">
+            <div class="ai-agent-card">
+              <!-- AI Header -->
+              <div class="ai-card-header">
+                <div class="ai-identity">
+                  <div class="ai-avatar-animated">
+                    <i data-lucide="bot"></i>
+                    <div class="ai-glow-ring"></div>
+                  </div>
+                  <div>
+                    <div class="ai-name-row">
+                      <h4>AI Hotel Analyst</h4>
+                      <span class="ai-online-dot"></span>
+                    </div>
+                    <span class="ai-role-text">Poppys Hospitality Intelligence v2.4</span>
+                  </div>
+                </div>
+                <div class="ai-status-chip">
+                  <i data-lucide="sparkles"></i> Active
+                </div>
+              </div>
+
+              <!-- AI Chat Stream Area -->
+              <div class="ai-chat-body" id="aiChatStream">
+                
+                <!-- Initial Welcome Message with Sample AI Response -->
+                <div class="ai-message bot-msg">
+                  <div class="msg-avatar"><i data-lucide="sparkles"></i></div>
+                  <div class="msg-bubble">
+                    <p class="ai-intro-head"><strong>Good day, Manager Rajesh!</strong></p>
+                    <p>I have continuously analyzed operations across all 8 Poppys branches. Here is your synthesized executive brief for this week:</p>
+                    
+                    <div class="ai-sample-brief">
+                      <div class="brief-highlight">
+                        <i data-lucide="trending-up" class="text-success"></i>
+                        <span>Overall hotel performance improved by <strong>12.8%</strong> compared with last week.</span>
+                      </div>
+
+                      <div class="brief-section">
+                        <span class="brief-sub positive-sub"><i data-lucide="check-circle-2"></i> Positive Highlights:</span>
+                        <ul>
+                          <li>Revenue increased <strong>13.5%</strong> (₹48.6L vs ₹42.8L prior week)</li>
+                          <li>Occupancy increased <strong>10.1%</strong> group-wide</li>
+                          <li>Food & Restaurant orders increased <strong>19.7%</strong></li>
+                        </ul>
+                      </div>
+
+                      <div class="brief-section">
+                        <span class="brief-sub attention-sub"><i data-lucide="alert-triangle"></i> Needs Attention:</span>
+                        <ul>
+                          <li>Kodaikanal weekday occupancy is low (54%)</li>
+                          <li>Ooty cancellation rate increased (+18%)</li>
+                        </ul>
+                      </div>
+
+                      <div class="brief-recommendation">
+                        <span class="rec-label"><i data-lucide="lightbulb"></i> Recommended Action:</span>
+                        <p>"Increase weekday promotional packages in Kodaikanal and investigate OTA cancellations in Ooty immediately."</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Quick Question Suggestion Buttons -->
+              <div class="ai-quick-questions">
+                <span class="quick-title"><i data-lucide="zap"></i> Quick Questions</span>
+                <div class="quick-chips-wrap">
+                  <button class="quick-chip" onclick="askAiQuestion('Which branch performed best this week?')">
+                    Which branch performed best this week?
+                  </button>
+                  <button class="quick-chip" onclick="askAiQuestion('Which branch needs attention?')">
+                    Which branch needs attention?
+                  </button>
+                  <button class="quick-chip" onclick="askAiQuestion('What was our revenue last week?')">
+                    What was our revenue last week?
+                  </button>
+                  <button class="quick-chip" onclick="askAiQuestion('Which room category is most profitable?')">
+                    Which room category is most profitable?
+                  </button>
+                  <button class="quick-chip" onclick="askAiQuestion('Show me top food items')">
+                    Show me top food items
+                  </button>
+                  <button class="quick-chip" onclick="askAiQuestion('Give me recommendations for next week')">
+                    Give me recommendations for next week
+                  </button>
+                </div>
+              </div>
+
+              <!-- AI Input / Chat Bar -->
+              <div class="ai-input-container">
+                <form id="aiChatForm" onsubmit="handleAiSubmit(event)">
+                  <div class="input-wrapper">
+                    <input 
+                      type="text" 
+                      id="aiQueryInput" 
+                      placeholder="Ask anything about your hotel performance..." 
+                      autocomplete="off"
+                    />
+                    <button type="submit" class="ai-send-btn" id="aiSendBtn" title="Send to AI Analyst">
+                      <i data-lucide="arrow-up-right"></i>
+                    </button>
+                  </div>
+                </form>
+                <div class="ai-footnote">
+                  <span>Poppys AI Analytics &bull; Natural Language Query Engine &bull; Demo Mode</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Operational Notification Modal / Drawer -->
+  <div class="modal-backdrop" id="notifDrawer">
+    <div class="drawer-content">
+      <div class="drawer-header">
+        <h3><i data-lucide="bell"></i> Operational Notifications</h3>
+        <button class="close-drawer" onclick="toggleNotifications()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="drawer-body">
+        <div class="notif-item unread">
+          <div class="notif-icon icon-red"><i data-lucide="alert-triangle"></i></div>
+          <div class="notif-content">
+            <strong>Ooty Cancellation Spike</strong>
+            <p>18% increase in weekend OTA cancellations detected.</p>
+            <span class="notif-time">42m ago</span>
+          </div>
+        </div>
+        <div class="notif-item unread">
+          <div class="notif-icon icon-amber"><i data-lucide="trending-down"></i></div>
+          <div class="notif-content">
+            <strong>Kodaikanal Mid-week Dip</strong>
+            <p>Occupancy at 54%. Promo package suggested.</p>
+            <span class="notif-time">2h ago</span>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon icon-green"><i data-lucide="check"></i></div>
+          <div class="notif-content">
+            <strong>Madurai Banquet Settlement</strong>
+            <p>₹3.2L banquet revenue cleared successfully.</p>
+            <span class="notif-time">Today, 08:30 AM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JavaScript Code -->
+  <script src="app.js"></script>
+  <script>
+    // Initialize Lucide Icons after DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "poppys-hotels-dashboard-mern",
+  "version": "2.0.0",
+  "description": "Poppys Hotels Management & AI Analytics Dashboard - MERN Stack",
+  "main": "dev-runner.js",
+  "scripts": {
+    "dev": "node dev-runner.js",
+    "start": "node dev-runner.js",
+    "server": "node server/server.js",
+    "client": "npm run dev --prefix client"
+  },
+  "keywords": [
+    "poppys-hotels",
+    "hotel-management",
+    "analytics",
+    "mern",
+    "dashboard"
+  ],
+  "author": "Poppys Hotels Group",
+  "license": "ISC"
+}
